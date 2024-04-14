@@ -1,25 +1,77 @@
 import * as React from 'react'
+import {
+  AppBar,
+  Avatar,
+  Badge,
+  Box,
+  Button,
+  Container,
+  IconButton,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Tooltip,
+  Typography,
+} from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import AdbIcon from '@mui/icons-material/Adb'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
-import {
-  Avatar,
-  Button,
-  Tooltip,
-  MenuItem,
-  IconButton,
-  Badge,
-  Typography,
-  Toolbar,
-  Box,
-  AppBar,
-  Menu,
-  Container,
-} from '@mui/material'
 
-const pages = ['Products', 'Categories', 'My Orders']
+const pages = ['Products', 'My Orders']
 const settings = ['Profile', 'Account', 'Logout']
 const AppName = 'WHOLESALE CATALOGUE 2024'
+
+const NavMenu = ({ anchorEl, handleClose }) => (
+  <Menu
+    id="menu-appbar"
+    anchorEl={anchorEl}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'left',
+    }}
+    keepMounted
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'left',
+    }}
+    open={Boolean(anchorEl)}
+    onClose={handleClose}
+    sx={{
+      display: { xs: 'block', md: 'none' },
+    }}
+  >
+    {pages.map((page) => (
+      <MenuItem key={page} onClick={handleClose}>
+        {page}
+      </MenuItem>
+    ))}
+  </Menu>
+)
+
+const UserMenu = ({ anchorEl, handleClose }) => (
+  <Menu
+    sx={{ mt: '45px' }}
+    id="menu-appbar"
+    anchorEl={anchorEl}
+    anchorOrigin={{
+      vertical: 'top',
+      horizontal: 'right',
+    }}
+    keepMounted
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'right',
+    }}
+    open={Boolean(anchorEl)}
+    onClose={handleClose}
+  >
+    {settings.map((setting) => (
+      <MenuItem key={setting} onClick={handleClose}>
+        {setting}
+      </MenuItem>
+    ))}
+  </Menu>
+)
 
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
@@ -27,27 +79,44 @@ function NavBar() {
     null
   )
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget)
-  }
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget)
-  }
+  const handleOpenNavMenu = React.useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      setAnchorElNav(event.currentTarget)
+    },
+    []
+  )
 
-  const handleCloseNavMenu = () => {
+  const handleOpenUserMenu = React.useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      setAnchorElUser(event.currentTarget)
+    },
+    []
+  )
+
+  const handleCloseNavMenu = React.useCallback(() => {
     setAnchorElNav(null)
-  }
+  }, [])
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = React.useCallback(() => {
     setAnchorElUser(null)
-  }
+  }, [])
 
-  const handleCartBtnClick = (event: React.MouseEvent<HTMLElement>) => {
-    console.log('Cart')
-  }
+  const handleCartBtnClick = React.useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      console.log('Cart')
+    },
+    []
+  )
 
   return (
-    <AppBar position="static" sx={{ mb: 3}}>
+    <AppBar
+      position="static"
+      sx={{
+        mb: 3,
+        height: '70px',
+        // , backgroundColor: '#6e4183'
+      }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -68,7 +137,6 @@ function NavBar() {
           >
             {AppName}
           </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -80,30 +148,7 @@ function NavBar() {
             >
               <MenuIcon />
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+            <NavMenu anchorEl={anchorElNav} handleClose={handleCloseNavMenu} />
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
@@ -135,7 +180,6 @@ function NavBar() {
               </Button>
             ))}
           </Box>
-
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Cart">
               <IconButton
@@ -146,46 +190,26 @@ function NavBar() {
                 sx={{ p: 0, mr: 3 }}
               >
                 <Badge badgeContent={4} color="error">
-                  <ShoppingCartIcon
-                    sx={{ mr: 0.5 }}
-                  />
+                  <ShoppingCartIcon sx={{ mr: 0.5 }} />
                 </Badge>
               </IconButton>
             </Tooltip>
           </Box>
-
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="User">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Arsh" src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
+            <UserMenu
               anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+              handleClose={handleCloseUserMenu}
+            />
           </Box>
         </Toolbar>
       </Container>
     </AppBar>
   )
 }
+
 export default NavBar
