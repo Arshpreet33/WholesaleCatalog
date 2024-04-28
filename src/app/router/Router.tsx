@@ -8,13 +8,15 @@ import AdminHomePage from '../../features/admin/home/AdminHomePage.tsx'
 import ProductsDashboard from '../features/products/dashboard/ProductsDashboard.tsx'
 import ClientForm from '../../features/admin/clients/form/ClientForm.tsx'
 import ClientDetails from '../../features/admin/clients/details/ClientDetails.tsx'
+import LoginForm from '../../features/users/LoginForm.tsx'
 
 export const Routes: RouteObject[] = [
   {
     path: '/',
-    element: <App />,
+    element: <LoginForm />,
     children: [
       { path: '', element: <HomePage /> },
+      // { path: 'login', element: <LoginForm /> },
       { path: 'products', element: <ProductsDashboard /> },
       // { path: 'orders', element: <Orders /> },
     ],

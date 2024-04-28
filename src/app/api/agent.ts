@@ -1,19 +1,20 @@
-import axios, { AxiosResponse } from 'axios'
-import { Client, ClientFormValues } from '../models/client.ts'
-import { PaginatedResults } from '../models/pagination.ts'
+import axios, { AxiosResponse } from "axios";
+import { Client, ClientFormValues } from "../models/client.ts";
+import { PaginatedResults } from "../models/pagination.ts";
+import { User, UserFormValues } from "../models/user.ts";
 
-axios.defaults.baseURL = 'http://localhost:2030/api'
+axios.defaults.baseURL = "http://localhost:2030/api";
 
 axios.interceptors.response.use(async (response) => {
-  const pagination = response.headers['pagination']
+  const pagination = response.headers["pagination"];
   if (pagination) {
-    response.data = new PaginatedResults(response.data, JSON.parse(pagination))
-    return response as AxiosResponse<PaginatedResults<any>>
+    response.data = new PaginatedResults(response.data, JSON.parse(pagination));
+    return response as AxiosResponse<PaginatedResults<any>>;
   }
-  return response
-})
+  return response;
+});
 
-const responseBody = <T>(response: AxiosResponse<T>) => response.data
+const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
 const requests = {
   get: <T>(url: string) => axios.get<T>(url).then(responseBody),
@@ -22,28 +23,36 @@ const requests = {
   put: <T>(url: string, body: {}) => axios.put<T>(url, body).then(responseBody),
   del: <T>(url: string) => axios.delete<T>(url).then(responseBody),
   toggleActive: <T>(url: string) => axios.put<T>(url).then(responseBody),
-}
+};
 
-const clientURL = '/clients'
+const clientURL = "/clients";
 const Clients = {
   list: (params: URLSearchParams) =>
     axios
       .get<PaginatedResults<Client[]>>(clientURL, { params })
       .then(responseBody),
-  details: (id: string) => requests.get<Client>(clientURL + '/' + id),
+  details: (id: string) => requests.get<Client>(clientURL + "/" + id),
   create: (client: ClientFormValues) => requests.post<void>(clientURL, client),
   edit: (client: ClientFormValues) =>
-    requests.put<void>(clientURL + '/' + client.id, client),
-  delete: (id: string) => requests.del<void>(clientURL + '/' + id),
+    requests.put<void>(clientURL + "/" + client.id, client),
+  delete: (id: string) => requests.del<void>(clientURL + "/" + id),
   toggleActive: (id: string) =>
-    requests.toggleActive<void>(clientURL + '/toggle/' + id),
-}
+    requests.toggleActive<void>(clientURL + "/toggle/" + id),
+};
+
+const Account = {
+  current: () => requests.get<User>("/account"),
+  login: (user: UserFormValues) => requests.post<User>("/account/login", user),
+  // register: (user: UserFormValues) =>
+  //   requests.post<User>('/account/register', user),
+};
 
 const agent = {
   Clients,
-}
+  Account,
+};
 
-export default agent
+export default agent;
 
 // import axios, { AxiosError, AxiosResponse } from 'axios';
 // import { toast } from 'react-toastify';
