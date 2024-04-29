@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from "react";
 import {
   AppBar,
   Avatar,
@@ -12,114 +12,127 @@ import {
   Toolbar,
   Tooltip,
   Typography,
-} from '@mui/material'
-import MenuIcon from '@mui/icons-material/Menu'
-import AdbIcon from '@mui/icons-material/Adb'
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import AdbIcon from "@mui/icons-material/Adb";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { observer } from "mobx-react-lite";
+import { useStore } from "../stores/store.ts";
 
-const pages = ['Products', 'My Orders']
-const settings = ['Profile', 'Account', 'Logout']
-const AppName = 'WHOLESALE CATALOGUE 2024'
+const pages = ["Products", "My Orders"];
+const settings = ["Profile", "Account", "Logout"];
+const AppName = "WHOLESALE CATALOGUE 2024";
 
-const NavMenu = ({ anchorEl, handleClose }) => (
-  <Menu
-    id="menu-appbar"
-    anchorEl={anchorEl}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'left',
-    }}
-    keepMounted
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'left',
-    }}
-    open={Boolean(anchorEl)}
-    onClose={handleClose}
-    sx={{
-      display: { xs: 'block', md: 'none' },
-    }}
-  >
-    {pages.map((page) => (
-      <MenuItem key={page} onClick={handleClose}>
-        {page}
-      </MenuItem>
-    ))}
-  </Menu>
-)
-
-const UserMenu = ({ anchorEl, handleClose }) => (
-  <Menu
-    sx={{ mt: '45px' }}
-    id="menu-appbar"
-    anchorEl={anchorEl}
-    anchorOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    keepMounted
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    open={Boolean(anchorEl)}
-    onClose={handleClose}
-  >
-    {settings.map((setting) => (
-      <MenuItem key={setting} onClick={handleClose}>
-        {setting}
-      </MenuItem>
-    ))}
-  </Menu>
-)
-
-function NavBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
+const NavBar = () => {
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
+    null
+  );
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
-  )
+  );
+  const { userStore } = useStore();
 
   const handleOpenNavMenu = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
-      setAnchorElNav(event.currentTarget)
+      setAnchorElNav(event.currentTarget);
     },
     []
-  )
+  );
 
   const handleOpenUserMenu = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
-      setAnchorElUser(event.currentTarget)
+      setAnchorElUser(event.currentTarget);
     },
     []
-  )
+  );
 
   const handleCloseNavMenu = React.useCallback(() => {
-    setAnchorElNav(null)
-  }, [])
+    setAnchorElNav(null);
+  }, []);
 
   const handleCloseUserMenu = React.useCallback(() => {
-    setAnchorElUser(null)
-  }, [])
+    setAnchorElUser(null);
+  }, []);
 
   const handleCartBtnClick = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
-      console.log('Cart')
+      console.log("Cart");
     },
     []
-  )
+  );
+
+  const NavMenu = ({ anchorEl, handleClose }) => (
+    <Menu
+      id="menu-appbar"
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "left",
+      }}
+      keepMounted
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "left",
+      }}
+      open={Boolean(anchorEl)}
+      onClose={handleClose}
+      sx={{
+        display: { xs: "block", md: "none" },
+      }}
+    >
+      {pages.map((page) => (
+        <MenuItem key={page} onClick={handleClose}>
+          {page}
+        </MenuItem>
+      ))}
+    </Menu>
+  );
+
+  const UserMenu = ({ anchorEl, handleClose }) => (
+    <Menu
+      sx={{ mt: "45px" }}
+      id="menu-appbar"
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      keepMounted
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={Boolean(anchorEl)}
+      onClose={handleClose}
+    >
+      {settings.map((setting) => (
+        <MenuItem
+          key={setting}
+          onClick={() => {
+            handleClose();
+            if (setting === "Logout") {
+              userStore.logout();
+            }
+          }}
+        >
+          {setting}
+        </MenuItem>
+      ))}
+    </Menu>
+  );
 
   return (
     <AppBar
       position="static"
       sx={{
         mb: 3,
-        height: '70px',
+        height: "70px",
         // , backgroundColor: '#6e4183'
       }}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -127,17 +140,17 @@ function NavBar() {
             href="#app-bar-with-responsive-menu"
             sx={{
               mr: 3,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
+              display: { xs: "none", md: "flex" },
+              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
             }}
           >
             {AppName}
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -150,7 +163,7 @@ function NavBar() {
             </IconButton>
             <NavMenu anchorEl={anchorElNav} handleClose={handleCloseNavMenu} />
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
@@ -158,23 +171,23 @@ function NavBar() {
             href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
-              display: { xs: 'flex', md: 'none' },
+              display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontFamily: 'monospace',
+              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
             }}
           >
             {AppName}
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}
               </Button>
@@ -196,9 +209,12 @@ function NavBar() {
             </Tooltip>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="User">
+            <Tooltip title={userStore.user?.displayName}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Arsh" src="/static/images/avatar/2.jpg" />
+                <Avatar
+                  alt={userStore.user?.displayName}
+                  src="/static/images/avatar/2.jpg"
+                />
               </IconButton>
             </Tooltip>
             <UserMenu
@@ -209,7 +225,7 @@ function NavBar() {
         </Toolbar>
       </Container>
     </AppBar>
-  )
-}
+  );
+};
 
-export default NavBar
+export default observer(NavBar);

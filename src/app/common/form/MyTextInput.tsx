@@ -1,19 +1,26 @@
-import { useField } from 'formik'
-import { TextField } from '@mui/material'
-import React from 'react'
+import { useField } from "formik";
+import { TextField } from "@mui/material";
+import React from "react";
 
 interface MyTextInputProps {
-  label: string
-  name: string
-  rows?: number
+  label: string;
+  name: string;
+  rows?: number;
+  type?: string;
 }
 
-const MyTextInput: React.FC<MyTextInputProps> = ({ label, name, rows }) => {
-  const [field, meta] = useField(name)
+const MyTextInput: React.FC<MyTextInputProps> = ({
+  label,
+  name,
+  rows,
+  type,
+}) => {
+  const [field, meta] = useField(name);
 
   return (
     <TextField
       {...field}
+      type={type}
       multiline={!!rows}
       rows={rows}
       id={name}
@@ -21,7 +28,7 @@ const MyTextInput: React.FC<MyTextInputProps> = ({ label, name, rows }) => {
       error={meta.touched && !!meta.error}
       helperText={meta.touched && meta.error}
     />
-  )
-}
+  );
+};
 
-export default MyTextInput
+export default MyTextInput;

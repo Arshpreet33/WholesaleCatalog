@@ -1,25 +1,25 @@
-// import axios from 'axios'
-// import './styles.css'
-// import { useCallback, useEffect, useState } from 'react'
-// import { Product } from '../models/product'
-import * as React from 'react'
-import NavBar from './NavBar.tsx'
-import { Container } from '@mui/material'
-import { Outlet } from 'react-router-dom'
-// import ProductsDashboard from '../features/products/dashboard/ProductsDashboard.tsx'
-// import ProductDetails from '../features/products/details/ProductDetails.tsx'
+import * as React from "react";
+import { CircularProgress, Container } from "@mui/material";
+import { Outlet } from "react-router-dom";
+import { useStore } from "../stores/store.ts";
+import LoginForm from "../../features/users/LoginForm.tsx";
+import { observer } from "mobx-react-lite";
+import { useEffect } from "react";
 
 const App = () => {
-  return (
-    <>
-      <NavBar />
-      <Container maxWidth="xl">
-        <Outlet />
-        {/* <ProductsDashboard products={products} /> */}
-        {/* <ProductDetails product={products[0]} /> */}
-      </Container>
-    </>
-  )
-}
+  const { commonStore, userStore } = useStore();
 
-export default App
+  useEffect(() => {
+    if (commonStore.token)
+      userStore.getUser().finally(() => commonStore.setAppLoaded());
+    else commonStore.setAppLoaded();
+  }, [commonStore, userStore]);
+
+  if (!commonStore.appLoaded) {
+    return <CircularProgress />;
+  }
+
+  return <>{userStore.isLoggedIn ? <Outlet /> : <LoginForm />}</>;
+};
+
+export default observer(App);
