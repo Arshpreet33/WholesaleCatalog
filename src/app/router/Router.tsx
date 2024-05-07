@@ -11,6 +11,7 @@ import NotFound from "../../features/errors/NotFound.tsx";
 import ServerError from "../../features/errors/ServerError.tsx";
 import HomePage from "../../features/home/HomePage.tsx";
 import ProductsDashboard from "../features/products/dashboard/ProductsDashboard.tsx";
+import ManufacturerDashboard from "../../features/admin/manufacturers/dashboard/ManufacturerDashboard.tsx";
 
 export const Routes: RouteObject[] = [
   {
@@ -40,7 +41,7 @@ export const Routes: RouteObject[] = [
               {
                 path: "manufacturers",
                 children: [
-                  { path: "", element: <ClientDashboard /> },
+                  { path: "", element: <ManufacturerDashboard /> },
                   { path: ":id", element: <ClientDetails /> },
                   { path: "create", element: <ClientForm /> },
                   { path: "edit/:id", element: <ClientForm /> },
