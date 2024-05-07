@@ -5,6 +5,10 @@ import { PaginatedResults } from "../models/pagination.ts";
 import { User, UserFormValues } from "../models/user.ts";
 import { store } from "../stores/store.ts";
 import { Router } from "../router/Router.tsx";
+import {
+  Manufacturer,
+  ManufacturerFormValues,
+} from "../models/manufacturer.ts";
 
 axios.defaults.baseURL = "http://localhost:2030/api";
 
@@ -87,6 +91,23 @@ const Clients = {
     requests.toggleActive<void>(clientURL + "/toggle/" + id),
 };
 
+const manufacturerURL = "/manufacturers";
+const Manufacturers = {
+  list: (params: URLSearchParams) =>
+    axios
+      .get<PaginatedResults<Manufacturer[]>>(manufacturerURL, { params })
+      .then(responseBody),
+  details: (id: string) =>
+    requests.get<Manufacturer>(manufacturerURL + "/" + id),
+  create: (manufacturer: ManufacturerFormValues) =>
+    requests.post<void>(manufacturerURL, manufacturer),
+  edit: (manufacturer: ManufacturerFormValues) =>
+    requests.put<void>(manufacturerURL + "/" + manufacturer.id, manufacturer),
+  delete: (id: string) => requests.del<void>(manufacturerURL + "/" + id),
+  toggleActive: (id: string) =>
+    requests.toggleActive<void>(manufacturerURL + "/toggle/" + id),
+};
+
 const Account = {
   current: () => requests.get<User>("/account"),
   login: (user: UserFormValues) => requests.post<User>("/account/login", user),
@@ -96,6 +117,7 @@ const Account = {
 
 const agent = {
   Clients,
+  Manufacturers,
   Account,
 };
 

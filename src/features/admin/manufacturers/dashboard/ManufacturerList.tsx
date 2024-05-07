@@ -21,17 +21,17 @@ import { useStore } from "../../../../app/stores/store.ts";
 import { observer } from "mobx-react-lite";
 import { Link } from "react-router-dom";
 
-const ClientList: React.FC = () => {
-  const { clientStore } = useStore();
+const ManufacturerList: React.FC = () => {
+  const { manufacturerStore } = useStore();
   const {
     setPagingParams,
-    deleteClient,
-    loadClients,
+    deleteManufacturer,
+    loadManufacturers,
     toggleActive,
     pagination,
-    clients,
+    manufacturers,
     pagingParams,
-  } = clientStore;
+  } = manufacturerStore;
 
   const handlePageChange = (
     _event: React.ChangeEvent<unknown>,
@@ -41,11 +41,11 @@ const ClientList: React.FC = () => {
       pageNumber: value,
       pageSize: pagingParams.pageSize,
     });
-    loadClients();
+    loadManufacturers();
   };
 
   const handleDelete = (id: string) => {
-    deleteClient(id);
+    deleteManufacturer(id);
   };
 
   const handleToggle = (id: string) => {
@@ -54,15 +54,15 @@ const ClientList: React.FC = () => {
         pageNumber: 1,
         pageSize: pagingParams.pageSize,
       });
-      loadClients();
+      loadManufacturers();
     });
   };
 
   useEffect(() => {
-    loadClients();
-  }, [loadClients]);
+    loadManufacturers();
+  }, [loadManufacturers]);
 
-  if (clientStore.loadingInitial) return <CircularProgress />;
+  if (manufacturerStore.loadingInitial) return <CircularProgress />;
 
   return (
     <div>
@@ -72,27 +72,12 @@ const ClientList: React.FC = () => {
             <TableRow>
               <TableCell>
                 <Typography variant="h6" sx={{ color: "white" }}>
-                  Code
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="h6" sx={{ color: "white" }}>
                   Name
                 </Typography>
               </TableCell>
               <TableCell>
                 <Typography variant="h6" sx={{ color: "white" }}>
-                  Email
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="h6" sx={{ color: "white" }}>
-                  Phone
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="h6" sx={{ color: "white" }}>
-                  Address
+                  Description
                 </Typography>
               </TableCell>
               <TableCell>
@@ -123,43 +108,36 @@ const ClientList: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {clients &&
-              clients.map((client) => (
+            {manufacturers &&
+              manufacturers.map((manufacturer) => (
                 <TableRow
-                  key={client.id}
+                  key={manufacturer.id}
                   sx={{
                     "&:hover": {
                       backgroundColor: "rgba(0, 0, 0, 0.04)", // Change this to the color you want
                     },
                   }}
                 >
-                  <TableCell>{client.code}</TableCell>
-                  <TableCell>{client.name}</TableCell>
-                  <TableCell>{client.email}</TableCell>
-                  <TableCell>{client.phoneNumber}</TableCell>
-                  <TableCell>{`${
-                    client.address2 ? `${client.address2} - ` : ""
-                  }${client.address}, ${client.city} ${client.province}, ${
-                    client.postalCode
-                  }`}</TableCell>
-                  <TableCell>{client.isActive.toString()}</TableCell>
+                  <TableCell>{manufacturer.name}</TableCell>
+                  <TableCell>{manufacturer.description}</TableCell>
+                  <TableCell>{manufacturer.isActive.toString()}</TableCell>
                   <TableCell>
-                    <IconButton component={Link} to={`edit/${client.id}`}>
+                    <IconButton component={Link} to={`edit/${manufacturer.id}`}>
                       <EditIcon />
                     </IconButton>
                   </TableCell>
                   <TableCell>
-                    <IconButton onClick={() => handleDelete(client.id)}>
+                    <IconButton onClick={() => handleDelete(manufacturer.id)}>
                       <DeleteIcon />
                     </IconButton>
                   </TableCell>
                   <TableCell>
-                    <IconButton component={Link} to={`${client.id}`}>
+                    <IconButton component={Link} to={`${manufacturer.id}`}>
                       <OpenInNewIcon />
                     </IconButton>
                   </TableCell>
                   <TableCell>
-                    <IconButton onClick={() => handleToggle(client.id)}>
+                    <IconButton onClick={() => handleToggle(manufacturer.id)}>
                       <SwapHorizIcon />
                     </IconButton>
                   </TableCell>
@@ -179,4 +157,4 @@ const ClientList: React.FC = () => {
   );
 };
 
-export default observer(ClientList);
+export default observer(ManufacturerList);

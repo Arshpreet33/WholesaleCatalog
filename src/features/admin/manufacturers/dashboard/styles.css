@@ -1,0 +1,11 @@
+.client-filters {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.search-bar {
+width: 300px; /* adjust as needed */
+}

@@ -5,8 +5,8 @@ import "./styles.css";
 import { useStore } from "../../../../app/stores/store.ts";
 import { observer } from "mobx-react-lite";
 
-const ClientFilters: React.FC = () => {
-  const { clientStore } = useStore();
+const ManufacturerFilters: React.FC = () => {
+  const { manufacturerStore } = useStore();
 
   const {
     nameFilter,
@@ -14,32 +14,32 @@ const ClientFilters: React.FC = () => {
     setNameFilter,
     setIsActiveFilter,
     setPagingParams,
-    loadClients,
-  } = clientStore;
+    loadManufacturers,
+  } = manufacturerStore;
 
-  const loadFilteredClients = () => {
+  const loadFilteredManufacturers = () => {
     setPagingParams({
       pageNumber: 1,
-      pageSize: clientStore.pagingParams.pageSize,
+      pageSize: manufacturerStore.pagingParams.pageSize,
     });
-    loadClients();
+    loadManufacturers();
   };
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNameFilter(event.target.value);
-    loadFilteredClients();
+    loadFilteredManufacturers();
   };
 
   const handleIsActiveChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsActiveFilter(event.target.checked);
-    loadFilteredClients();
+    loadFilteredManufacturers();
   };
 
   return (
     <div>
-      <div className="client-filters">
+      <div className="manufacturer-filters">
         <SearchBar
-          label="Search by code, name, or email"
+          label="Search by name"
           value={nameFilter}
           onChange={handleNameChange}
           className="search-bar"
@@ -55,4 +55,4 @@ const ClientFilters: React.FC = () => {
   );
 };
 
-export default observer(ClientFilters);
+export default observer(ManufacturerFilters);

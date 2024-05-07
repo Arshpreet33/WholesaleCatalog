@@ -37,6 +37,15 @@ export const Routes: RouteObject[] = [
                   { path: "edit/:id", element: <ClientForm /> },
                 ],
               },
+              {
+                path: "manufacturers",
+                children: [
+                  { path: "", element: <ClientDashboard /> },
+                  { path: ":id", element: <ClientDetails /> },
+                  { path: "create", element: <ClientForm /> },
+                  { path: "edit/:id", element: <ClientForm /> },
+                ],
+              },
             ],
           },
         ],
