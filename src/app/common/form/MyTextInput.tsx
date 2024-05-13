@@ -1,5 +1,5 @@
 import { useField } from "formik";
-import { Box, TextField } from "@mui/material";
+import { Box, MenuItem, TextField } from "@mui/material";
 import React from "react";
 
 interface MyTextInputProps {
@@ -8,6 +8,9 @@ interface MyTextInputProps {
   rows?: number;
   type?: string;
   fullWidth?: boolean;
+  select?: boolean;
+  list?: any[];
+  defaultValue?: string;
 }
 
 const MyTextInput: React.FC<MyTextInputProps> = ({
@@ -16,8 +19,15 @@ const MyTextInput: React.FC<MyTextInputProps> = ({
   rows,
   type,
   fullWidth,
+  select,
+  list,
+  defaultValue,
 }) => {
   const [field, meta] = useField(name);
+
+  let id = name;
+  if (rows) id = "outlined-textarea";
+  if (select) id = "outlined-select-currency";
 
   return (
     <Box
@@ -31,12 +41,23 @@ const MyTextInput: React.FC<MyTextInputProps> = ({
         type={type}
         multiline={!!rows}
         label={label}
-        id={rows ? "outlined-textarea" : name}
+        id={id}
         fullWidth={fullWidth}
+        select={select}
+        defaultValue={defaultValue}
         minRows={rows ? 2 : undefined}
         error={meta.touched && !!meta.error}
         helperText={meta.touched && meta.error}
-      />
+      >
+        {list?.map((item) => {
+          console.log(item);
+          return (
+            <MenuItem key={item.id} value={item.id}>
+              {item.name}
+            </MenuItem>
+          );
+        })}
+      </TextField>
     </Box>
   );
 };

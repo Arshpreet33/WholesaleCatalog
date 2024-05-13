@@ -33,29 +33,25 @@ const ManufacturerList: React.FC = () => {
     pagingParams,
   } = manufacturerStore;
 
-  const handlePageChange = (
-    _event: React.ChangeEvent<unknown>,
-    value: number
-  ) => {
+  const navigateToHome = (pageNumber: number) => {
     setPagingParams({
-      pageNumber: value,
+      pageNumber: pageNumber,
       pageSize: pagingParams.pageSize,
     });
     loadManufacturers();
   };
 
+  const handlePageChange = (
+    _event: React.ChangeEvent<unknown>,
+    value: number
+  ) => navigateToHome(value);
+
   const handleDelete = (id: string) => {
-    deleteManufacturer(id);
+    deleteManufacturer(id).then(() => navigateToHome(1));
   };
 
   const handleToggle = (id: string) => {
-    toggleActive(id).then(() => {
-      setPagingParams({
-        pageNumber: 1,
-        pageSize: pagingParams.pageSize,
-      });
-      loadManufacturers();
-    });
+    toggleActive(id).then(() => navigateToHome(1));
   };
 
   useEffect(() => {

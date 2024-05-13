@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
-import { Box, Button, CircularProgress, Container, Grid } from "@mui/material";
+import { Button, CircularProgress, Grid } from "@mui/material";
 import * as Yup from "yup";
 import { ManufacturerFormValues } from "../../../../app/models/manufacturer.ts";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -25,30 +25,36 @@ const ManufacturerForm: React.FC = () => {
   const navigate = useNavigate();
   const { manufacturerStore } = useStore();
   const {
+    editMode,
+    loadingInitial,
+    pagingParams,
+    setPagingParams,
     loadManufacturerById,
     updateManufacturer,
     saveManufacturer,
-    editMode,
     setEditMode,
-    loadingInitial,
   } = manufacturerStore;
   const [manufacturer, setManufacturer] =
     useState<ManufacturerFormValues | null>(null);
 
   const { id } = useParams();
 
+  const navigateToHome = () => {
+    setPagingParams({
+      pageNumber: 1,
+      pageSize: pagingParams.pageSize,
+    });
+    navigate("/admin/manufacturers");
+  };
+
   const handleCreateOrEditManufacturer = (
     manufacturer: ManufacturerFormValues
   ) => {
     if (manufacturer.id) {
-      updateManufacturer(manufacturer).then(() =>
-        navigate(`/admin/manufacturers`)
-      );
+      updateManufacturer(manufacturer).then(() => navigateToHome());
     } else {
       manufacturer.id = uuid();
-      saveManufacturer(manufacturer).then(() =>
-        navigate(`/admin/manufacturers`)
-      );
+      saveManufacturer(manufacturer).then(() => navigateToHome());
     }
   };
 

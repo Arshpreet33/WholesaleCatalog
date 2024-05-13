@@ -1,96 +1,106 @@
-import React, { useEffect, useState } from 'react'
-import { Formik } from 'formik'
-import { Button, CircularProgress, Grid } from '@mui/material'
-import * as Yup from 'yup'
-import { ClientFormValues } from '../../../../app/models/client.ts'
-import { Link, useNavigate, useParams } from 'react-router-dom'
-import MyTextInput from '../../../../app/common/form/MyTextInput.tsx'
-import { useStore } from '../../../../app/stores/store.ts'
-import { observer } from 'mobx-react-lite'
-import { v4 as uuid } from 'uuid'
+import React, { useEffect, useState } from "react";
+import { Formik } from "formik";
+import { Button, CircularProgress, Grid } from "@mui/material";
+import * as Yup from "yup";
+import { ClientFormValues } from "../../../../app/models/client.ts";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import MyTextInput from "../../../../app/common/form/MyTextInput.tsx";
+import { useStore } from "../../../../app/stores/store.ts";
+import { observer } from "mobx-react-lite";
+import { v4 as uuid } from "uuid";
 
 const enum DISPLAY_NAMES {
-  code = 'Code',
-  name = 'Name',
-  email = 'Email',
-  phoneNumber = 'Phone Number',
-  address = 'Address',
-  address2 = 'Address 2',
-  city = 'City',
-  province = 'Province',
-  postalCode = 'Postal Code',
+  code = "Code",
+  name = "Name",
+  email = "Email",
+  phoneNumber = "Phone Number",
+  address = "Address",
+  address2 = "Address 2",
+  city = "City",
+  province = "Province",
+  postalCode = "Postal Code",
 }
 
 const enum FIELD_NAMES {
-  code = 'code',
-  name = 'name',
-  email = 'email',
-  phoneNumber = 'phoneNumber',
-  address = 'address',
-  address2 = 'address2',
-  city = 'city',
-  province = 'province',
-  postalCode = 'postalCode',
+  code = "code",
+  name = "name",
+  email = "email",
+  phoneNumber = "phoneNumber",
+  address = "address",
+  address2 = "address2",
+  city = "city",
+  province = "province",
+  postalCode = "postalCode",
 }
 
 const ClientForm: React.FC = () => {
-  const navigate = useNavigate()
-  const { clientStore } = useStore()
+  const navigate = useNavigate();
+  const { clientStore } = useStore();
   const {
+    editMode,
+    pagingParams,
+    loadingInitial,
+    setPagingParams,
+    setEditMode,
     loadClientById,
     updateClient,
     saveClient,
-    editMode,
-    setEditMode,
-    loadingInitial,
-  } = clientStore
-  const [client, setClient] = useState<ClientFormValues | null>(null)
+  } = clientStore;
+  const [client, setClient] = useState<ClientFormValues | null>(null);
 
-  const { id } = useParams()
+  const { id } = useParams();
+
+  const navigateToHome = () => {
+    setPagingParams({
+      pageNumber: 1,
+      pageSize: pagingParams.pageSize,
+    });
+    navigate("/admin/clients");
+  };
 
   const handleCreateOrEditClient = (client: ClientFormValues) => {
     if (client.id) {
-      updateClient(client).then(() => navigate(`/admin/clients`))
+      updateClient(client).then(() => navigateToHome());
     } else {
-      client.id = uuid()
-      saveClient(client).then(() => navigate(`/admin/clients`))
+      client.id = uuid();
+      saveClient(client).then(() => navigateToHome());
     }
-  }
+  };
 
   useEffect(() => {
     if (id) {
       loadClientById(id).then((client) => {
-        setClient(new ClientFormValues(client))
-      })
-      setEditMode(true)
+        setClient(new ClientFormValues(client));
+      });
+      setEditMode(true);
     } else {
-      setClient(new ClientFormValues())
-      setEditMode(false)
+      setClient(new ClientFormValues());
+      setEditMode(false);
     }
-  }, [id, loadClientById, setEditMode])
+  }, [id, loadClientById, setEditMode]);
 
   const validationSchema = Yup.object({
-    code: Yup.string().required('Required'),
-    name: Yup.string().required('Required'),
-    email: Yup.string().email('Invalid email address').required('Required'),
-    phoneNumber: Yup.string().required('Required'),
-    address: Yup.string().required('Required'),
-    city: Yup.string().required('Required'),
-    province: Yup.string().required('Required'),
-    postalCode: Yup.string().required('Required'),
-  })
+    code: Yup.string().required("Required"),
+    name: Yup.string().required("Required"),
+    email: Yup.string().email("Invalid email address").required("Required"),
+    phoneNumber: Yup.string().required("Required"),
+    address: Yup.string().required("Required"),
+    city: Yup.string().required("Required"),
+    province: Yup.string().required("Required"),
+    postalCode: Yup.string().required("Required"),
+  });
 
-  if (editMode && (loadingInitial || !client)) return <CircularProgress />
+  if (editMode && (loadingInitial || !client)) return <CircularProgress />;
 
   return (
     client && (
       <>
-        <h1>{editMode ? 'Edit Client' : 'Add Client'}</h1>
+        <h1>{editMode ? "Edit Client" : "Add Client"}</h1>
         <Formik
           initialValues={client}
           validationSchema={validationSchema}
           onSubmit={(values) => {
-            handleCreateOrEditClient(values)
+            handleCreateOrEditClient(values);
           }}
         >
           {({ handleSubmit, isValid, isSubmitting, dirty }) => (
@@ -160,7 +170,7 @@ const ClientForm: React.FC = () => {
                       color="primary"
                       disabled={isSubmitting || !dirty || !isValid}
                     >
-                      {editMode ? 'Save' : 'Add'}
+                      {editMode ? "Save" : "Add"}
                     </Button>
                   </Grid>
 
@@ -181,7 +191,7 @@ const ClientForm: React.FC = () => {
         </Formik>
       </>
     )
-  )
-}
+  );
+};
 
-export default observer(ClientForm)
+export default observer(ClientForm);

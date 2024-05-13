@@ -19,7 +19,7 @@ const CategoryFilters: React.FC = () => {
   const {
     nameFilter,
     isActiveFilter,
-    loadingInitial,
+    loadingFilters,
     manufacturers,
     loadActiveManufacturers,
     setNameFilter,
@@ -57,7 +57,7 @@ const CategoryFilters: React.FC = () => {
     loadActiveManufacturers();
   }, [loadActiveManufacturers]);
 
-  if (loadingInitial) return <CircularProgress />;
+  if (loadingFilters) return <CircularProgress />;
 
   return (
     <div>
@@ -85,7 +85,9 @@ const CategoryFilters: React.FC = () => {
             label="Manufacturer"
             style={{ width: "200px" }}
           >
-            <MenuItem value="">All</MenuItem>
+            <MenuItem value="">
+              <em>All</em>
+            </MenuItem>
             {manufacturers?.map((manufacturer) => (
               <MenuItem key={manufacturer.id} value={manufacturer.id}>
                 {manufacturer.name}

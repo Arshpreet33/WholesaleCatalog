@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
-import {
-  Button,
-  CircularProgress,
-  Grid,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
-} from "@mui/material";
+import { Button, CircularProgress, Grid } from "@mui/material";
 import * as Yup from "yup";
 import { CategoryFormValues } from "../../../../app/models/category.ts";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -33,30 +25,44 @@ const enum FIELD_NAMES {
 
 const CategoryForm: React.FC = () => {
   const navigate = useNavigate();
-  const { categoryStore, manufacturerStore } = useStore();
+  const { categoryStore } = useStore();
   const {
+    loadingInitial,
+    loadingFilters,
+    editMode,
+    manufacturers,
+    pagingParams,
+    setPagingParams,
+    loadActiveManufacturers,
     loadCategoryById,
     updateCategory,
     saveCategory,
-    editMode,
     setEditMode,
-    loadingInitial,
   } = categoryStore;
-  const { loadManufacturers, manufacturers } = manufacturerStore;
+
   const [category, setCategory] = useState<CategoryFormValues | null>(null);
 
   const { id } = useParams();
 
+  const navigateToHome = () => {
+    setPagingParams({
+      pageNumber: 1,
+      pageSize: pagingParams.pageSize,
+    });
+    navigate("/admin/categories");
+  };
+
   const handleCreateOrEditCategory = (category: CategoryFormValues) => {
     if (category.id) {
-      updateCategory(category).then(() => navigate(`/admin/categories`));
+      updateCategory(category).then(() => navigateToHome());
     } else {
       category.id = uuid();
-      saveCategory(category).then(() => navigate(`/admin/categories`));
+      saveCategory(category).then(() => navigateToHome());
     }
   };
 
   useEffect(() => {
+    loadActiveManufacturers();
     if (id) {
       loadCategoryById(id).then((category) => {
         setCategory(new CategoryFormValues(category));
@@ -66,17 +72,26 @@ const CategoryForm: React.FC = () => {
       setCategory(new CategoryFormValues());
       setEditMode(false);
     }
-    loadManufacturers();
-  }, [id, loadCategoryById, setEditMode, loadManufacturers]);
+  }, [id, loadCategoryById, setEditMode, loadActiveManufacturers]);
 
-  const validationSchema = Yup.object({
+  const validationSchema_add = Yup.object({
     name: Yup.string().required("Required"),
     description: Yup.string().required("Required"),
     imageUrl: Yup.string().url("Invalid URL"),
     manufacturerId: Yup.string().required("Required"),
   });
 
-  if (editMode && (loadingInitial || !category)) return <CircularProgress />;
+  const validationSchema_edit = Yup.object({
+    name: Yup.string().required("Required"),
+    description: Yup.string().required("Required"),
+    imageUrl: Yup.string().url("Invalid URL"),
+  });
+
+  if (
+    editMode &&
+    (loadingInitial || !category || loadingFilters || !manufacturers)
+  )
+    return <CircularProgress />;
 
   return (
     category && (
@@ -84,7 +99,9 @@ const CategoryForm: React.FC = () => {
         <h1>{editMode ? "Edit Category" : "Add Category"}</h1>
         <Formik
           initialValues={category}
-          validationSchema={validationSchema}
+          validationSchema={
+            editMode ? validationSchema_edit : validationSchema_add
+          }
           onSubmit={(values) => {
             handleCreateOrEditCategory(values);
           }}
@@ -113,31 +130,20 @@ const CategoryForm: React.FC = () => {
                     fullWidth
                   />
                 </Grid>
-                <Grid item>
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">
-                      Manufacturer
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={category.manufacturerId}
-                      onChange={(e) =>
-                        setFieldValue(
-                          FIELD_NAMES.manufacturerId,
-                          e.target.value
-                        )
+                {!editMode && (
+                  <Grid item>
+                    <MyTextInput
+                      name={FIELD_NAMES.manufacturerId}
+                      label={DISPLAY_NAMES.manufacturerId}
+                      select
+                      list={manufacturers}
+                      defaultValue={
+                        category.manufacturerId ?? manufacturers?.[0]?.id
                       }
-                    >
-                      {manufacturers.map((manufacturer) => (
-                        <MenuItem key={manufacturer.id} value={manufacturer.id}>
-                          {manufacturer.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-
+                      fullWidth
+                    />
+                  </Grid>
+                )}
                 <Grid item container spacing={8}>
                   <Grid item>
                     <Button

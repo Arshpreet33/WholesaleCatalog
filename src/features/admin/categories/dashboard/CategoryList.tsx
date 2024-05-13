@@ -34,29 +34,25 @@ const CategoryList: React.FC = () => {
     loadingInitial,
   } = categoryStore;
 
-  const handlePageChange = (
-    _event: React.ChangeEvent<unknown>,
-    value: number
-  ) => {
+  const navigateToHome = (pageNumber: number) => {
     setPagingParams({
-      pageNumber: value,
+      pageNumber: pageNumber,
       pageSize: pagingParams.pageSize,
     });
     loadCategories();
   };
 
+  const handlePageChange = (
+    _event: React.ChangeEvent<unknown>,
+    value: number
+  ) => navigateToHome(value);
+
   const handleDelete = (id: string) => {
-    deleteCategory(id);
+    deleteCategory(id).then(() => navigateToHome(1));
   };
 
   const handleToggle = (id: string) => {
-    toggleActive(id).then(() => {
-      setPagingParams({
-        pageNumber: 1,
-        pageSize: pagingParams.pageSize,
-      });
-      loadCategories();
-    });
+    toggleActive(id).then(() => navigateToHome(1));
   };
 
   useEffect(() => {

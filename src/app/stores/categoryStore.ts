@@ -10,6 +10,7 @@ export default class CategoryStore {
   selectedCategory: Category | undefined = undefined;
   editMode = false;
   loadingInitial = true;
+  loadingFilters = true;
   submitting = false;
   pagination: Pagination | null = null;
   pagingParams = new PagingParams();
@@ -48,7 +49,6 @@ export default class CategoryStore {
   };
 
   loadActiveManufacturers = async () => {
-    this.loadingInitial = true;
     try {
       const params = new URLSearchParams();
       params.append("isActive", "true");
@@ -56,13 +56,13 @@ export default class CategoryStore {
       const response = await agent.Manufacturers.list(params);
 
       runInAction(() => {
-        this.manufacturers = response.data;
-        this.loadingInitial = false;
+        this.setManufacturers(response.data);
+        this.setLoadingFilters(false);
       });
     } catch (error) {
       console.log(error);
       runInAction(() => {
-        this.loadingInitial = false;
+        this.setLoadingFilters(false);
       });
     }
   };
@@ -167,6 +167,10 @@ export default class CategoryStore {
     this.loadingInitial = loadingInitial;
   };
 
+  setLoadingFilters = (loadingFilters: boolean) => {
+    this.loadingFilters = loadingFilters;
+  };
+
   setPagination = (pagination: Pagination) => {
     this.pagination = pagination;
   };
@@ -189,6 +193,10 @@ export default class CategoryStore {
 
   setCategories = (categories: Category[]) => {
     this.categories = categories;
+  };
+
+  setManufacturers = (manufacturers: Manufacturer[]) => {
+    this.manufacturers = manufacturers;
   };
 
   clearSelectedCategory = () => {
