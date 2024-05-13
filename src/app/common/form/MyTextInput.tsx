@@ -1,5 +1,5 @@
 import { useField } from "formik";
-import { TextField } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import React from "react";
 
 interface MyTextInputProps {
@@ -7,6 +7,7 @@ interface MyTextInputProps {
   name: string;
   rows?: number;
   type?: string;
+  fullWidth?: boolean;
 }
 
 const MyTextInput: React.FC<MyTextInputProps> = ({
@@ -14,20 +15,29 @@ const MyTextInput: React.FC<MyTextInputProps> = ({
   name,
   rows,
   type,
+  fullWidth,
 }) => {
   const [field, meta] = useField(name);
 
   return (
-    <TextField
-      {...field}
-      type={type}
-      multiline={!!rows}
-      rows={rows}
-      id={name}
-      label={label}
-      error={meta.touched && !!meta.error}
-      helperText={meta.touched && meta.error}
-    />
+    <Box
+      sx={{
+        width: 600,
+        maxWidth: "100%",
+      }}
+    >
+      <TextField
+        {...field}
+        type={type}
+        multiline={!!rows}
+        label={label}
+        id={rows ? "outlined-textarea" : name}
+        fullWidth={fullWidth}
+        minRows={rows ? 2 : undefined}
+        error={meta.touched && !!meta.error}
+        helperText={meta.touched && meta.error}
+      />
+    </Box>
   );
 };
 

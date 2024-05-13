@@ -1,10 +1,9 @@
 export const ADMIN_MENU_ITEMS = [
-  'Home',
-  'Users',
-  'Clients',
-  'Manufacturers',
-  'Products',
-  'Orders',
-  'Reports',
-  'Settings',
-]
+  "Home",
+  "Users",
+  "Clients",
+  "Manufacturers",
+  "Categories",
+  "Products",
+  "Orders",
+];

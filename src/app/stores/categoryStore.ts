@@ -1,11 +1,13 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { Manufacturer, ManufacturerFormValues } from "../models/manufacturer";
+import { Category, CategoryFormValues } from "../models/category";
 import agent from "../api/agent.ts";
 import { Pagination, PagingParams } from "../models/pagination.ts";
+import { Manufacturer } from "../models/manufacturer.ts";
 
-export default class ManufacturerStore {
+export default class CategoryStore {
+  categories: Category[] = [];
   manufacturers: Manufacturer[] = [];
-  selectedManufacturer: Manufacturer | undefined = undefined;
+  selectedCategory: Category | undefined = undefined;
   editMode = false;
   loadingInitial = true;
   submitting = false;
@@ -13,27 +15,27 @@ export default class ManufacturerStore {
   pagingParams = new PagingParams();
   isActiveFilter = true;
   nameFilter = "";
+  manufacturerIdFilter = "";
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  loadManufacturers = async () => {
-    // this.setLoadingInitial(true)
+  loadCategories = async () => {
     try {
-      // Create a new URLSearchParams instance
       let params = new URLSearchParams();
 
-      // Append the filter values to the query string
       if (this.nameFilter) params.append("name", this.nameFilter);
+      if (this.manufacturerIdFilter)
+        params.append("manufacturerId", this.manufacturerIdFilter);
       params.append("isActive", String(this.isActiveFilter));
       params.append("pageNumber", this.pagingParams.pageNumber.toString());
       params.append("pageSize", this.pagingParams.pageSize.toString());
 
-      const response = await agent.Manufacturers.list(params);
+      const response = await agent.Categories.list(params);
 
       runInAction(() => {
-        this.setManufacturers(response.data);
+        this.setCategories(response.data);
         this.setPagination(response.pagination);
         this.setLoadingInitial(false);
       });
@@ -45,14 +47,34 @@ export default class ManufacturerStore {
     }
   };
 
-  getManufacturerById = (id: string) => {
-    return this.manufacturers.find((manufacturer) => manufacturer.id === id);
+  loadActiveManufacturers = async () => {
+    this.loadingInitial = true;
+    try {
+      const params = new URLSearchParams();
+      params.append("isActive", "true");
+
+      const response = await agent.Manufacturers.list(params);
+
+      runInAction(() => {
+        this.manufacturers = response.data;
+        this.loadingInitial = false;
+      });
+    } catch (error) {
+      console.log(error);
+      runInAction(() => {
+        this.loadingInitial = false;
+      });
+    }
   };
 
-  saveManufacturer = async (manufacturer: ManufacturerFormValues) => {
+  getCategoryById = (id: string) => {
+    return this.categories.find((category) => category.id === id);
+  };
+
+  saveCategory = async (category: CategoryFormValues) => {
     this.submitting = true;
     try {
-      await agent.Manufacturers.create(manufacturer);
+      await agent.Categories.create(category);
       this.setSubmitting(false);
       this.setEditMode(false);
     } catch (error) {
@@ -61,10 +83,10 @@ export default class ManufacturerStore {
     }
   };
 
-  updateManufacturer = async (manufacturer: ManufacturerFormValues) => {
+  updateCategory = async (category: CategoryFormValues) => {
     this.submitting = true;
     try {
-      await agent.Manufacturers.edit(manufacturer);
+      await agent.Categories.edit(category);
       this.setSubmitting(false);
       this.setEditMode(false);
     } catch (error) {
@@ -73,20 +95,20 @@ export default class ManufacturerStore {
     }
   };
 
-  loadManufacturerById = async (id: string) => {
-    let manufacturer = this.getManufacturerById(id);
-    if (manufacturer) {
-      this.selectedManufacturer = manufacturer;
-      return manufacturer;
+  loadCategoryById = async (id: string) => {
+    let category = this.getCategoryById(id);
+    if (category) {
+      this.selectedCategory = category;
+      return category;
     } else {
       this.loadingInitial = true;
       try {
-        manufacturer = await agent.Manufacturers.details(id);
+        category = await agent.Categories.details(id);
         runInAction(() => {
-          this.selectedManufacturer = manufacturer;
+          this.selectedCategory = category;
           this.loadingInitial = false;
         });
-        return manufacturer;
+        return category;
       } catch (error) {
         console.log(error);
         runInAction(() => {
@@ -96,13 +118,13 @@ export default class ManufacturerStore {
     }
   };
 
-  deleteManufacturer = async (id: string) => {
+  deleteCategory = async (id: string) => {
     this.submitting = true;
     try {
-      await agent.Manufacturers.delete(id);
+      await agent.Categories.delete(id);
       runInAction(() => {
-        this.manufacturers = this.manufacturers.filter(
-          (manufacturer) => manufacturer.id !== id
+        this.categories = this.categories.filter(
+          (category) => category.id !== id
         );
         this.submitting = false;
       });
@@ -117,11 +139,11 @@ export default class ManufacturerStore {
   toggleActive = async (id: string) => {
     this.submitting = true;
     try {
-      await agent.Manufacturers.toggleActive(id);
+      await agent.Categories.toggleActive(id);
       runInAction(() => {
-        let manufacturer = this.getManufacturerById(id);
-        if (manufacturer) {
-          manufacturer.isActive = !manufacturer.isActive;
+        let category = this.getCategoryById(id);
+        if (category) {
+          category.isActive = !category.isActive;
         }
         this.submitting = false;
       });
@@ -161,11 +183,15 @@ export default class ManufacturerStore {
     this.isActiveFilter = value;
   };
 
-  setManufacturers = (manufacturers: Manufacturer[]) => {
-    this.manufacturers = manufacturers;
+  setManufacturerIdFilter = (value: string) => {
+    this.manufacturerIdFilter = value;
   };
 
-  clearSelectedManufacturer = () => {
-    this.selectedManufacturer = undefined;
+  setCategories = (categories: Category[]) => {
+    this.categories = categories;
+  };
+
+  clearSelectedCategory = () => {
+    this.selectedCategory = undefined;
   };
 }

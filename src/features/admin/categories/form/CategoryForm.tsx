@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
-import { Box, Button, CircularProgress, Container, Grid } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
 import * as Yup from "yup";
-import { ManufacturerFormValues } from "../../../../app/models/manufacturer.ts";
+import { CategoryFormValues } from "../../../../app/models/category.ts";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import MyTextInput from "../../../../app/common/form/MyTextInput.tsx";
 import { useStore } from "../../../../app/stores/store.ts";
@@ -13,78 +21,75 @@ const enum DISPLAY_NAMES {
   name = "Name",
   description = "Description",
   imageUrl = "Image URL",
+  manufacturerId = "Manufacturer",
 }
 
 const enum FIELD_NAMES {
   name = "name",
   description = "description",
   imageUrl = "imageUrl",
+  manufacturerId = "manufacturerId",
 }
 
-const ManufacturerForm: React.FC = () => {
+const CategoryForm: React.FC = () => {
   const navigate = useNavigate();
-  const { manufacturerStore } = useStore();
+  const { categoryStore, manufacturerStore } = useStore();
   const {
-    loadManufacturerById,
-    updateManufacturer,
-    saveManufacturer,
+    loadCategoryById,
+    updateCategory,
+    saveCategory,
     editMode,
     setEditMode,
     loadingInitial,
-  } = manufacturerStore;
-  const [manufacturer, setManufacturer] =
-    useState<ManufacturerFormValues | null>(null);
+  } = categoryStore;
+  const { loadManufacturers, manufacturers } = manufacturerStore;
+  const [category, setCategory] = useState<CategoryFormValues | null>(null);
 
   const { id } = useParams();
 
-  const handleCreateOrEditManufacturer = (
-    manufacturer: ManufacturerFormValues
-  ) => {
-    if (manufacturer.id) {
-      updateManufacturer(manufacturer).then(() =>
-        navigate(`/admin/manufacturers`)
-      );
+  const handleCreateOrEditCategory = (category: CategoryFormValues) => {
+    if (category.id) {
+      updateCategory(category).then(() => navigate(`/admin/categories`));
     } else {
-      manufacturer.id = uuid();
-      saveManufacturer(manufacturer).then(() =>
-        navigate(`/admin/manufacturers`)
-      );
+      category.id = uuid();
+      saveCategory(category).then(() => navigate(`/admin/categories`));
     }
   };
 
   useEffect(() => {
     if (id) {
-      loadManufacturerById(id).then((manufacturer) => {
-        setManufacturer(new ManufacturerFormValues(manufacturer));
+      loadCategoryById(id).then((category) => {
+        setCategory(new CategoryFormValues(category));
       });
       setEditMode(true);
     } else {
-      setManufacturer(new ManufacturerFormValues());
+      setCategory(new CategoryFormValues());
       setEditMode(false);
     }
-  }, [id, loadManufacturerById, setEditMode]);
+    loadManufacturers();
+  }, [id, loadCategoryById, setEditMode, loadManufacturers]);
 
   const validationSchema = Yup.object({
     name: Yup.string().required("Required"),
     description: Yup.string().required("Required"),
     imageUrl: Yup.string().url("Invalid URL"),
+    manufacturerId: Yup.string().required("Required"),
   });
 
-  if (editMode && (loadingInitial || !manufacturer))
-    return <CircularProgress />;
+  if (editMode && (loadingInitial || !category)) return <CircularProgress />;
 
   return (
-    manufacturer && (
+    category && (
       <>
-        <h1>{editMode ? "Edit Manufacturer" : "Add Manufacturer"}</h1>
+        <h1>{editMode ? "Edit Category" : "Add Category"}</h1>
         <Formik
-          initialValues={manufacturer}
+          initialValues={category}
           validationSchema={validationSchema}
           onSubmit={(values) => {
-            handleCreateOrEditManufacturer(values);
+            handleCreateOrEditCategory(values);
           }}
         >
-          {({ handleSubmit, isValid, isSubmitting, dirty }) => (
+          {({ handleSubmit, isValid, isSubmitting, dirty, setFieldValue }) => (
             <form onSubmit={handleSubmit}>
               <Grid container spacing={3} direction="column">
                 <Grid item>
@@ -108,6 +113,30 @@ const ManufacturerForm: React.FC = () => {
                     fullWidth
                   />
                 </Grid>
+                <Grid item>
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">
+                      Manufacturer
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={category.manufacturerId}
+                      onChange={(e) =>
+                        setFieldValue(
+                          FIELD_NAMES.manufacturerId,
+                          e.target.value
+                        )
+                      }
+                    >
+                      {manufacturers.map((manufacturer) => (
+                        <MenuItem key={manufacturer.id} value={manufacturer.id}>
+                          {manufacturer.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
 
                 <Grid item container spacing={8}>
                   <Grid item>
@@ -126,7 +155,7 @@ const ManufacturerForm: React.FC = () => {
                       variant="contained"
                       color="error"
                       component={Link}
-                      to={`/admin/manufacturers`}
+                      to={`/admin/categories`}
                     >
                       Cancel
                     </Button>
@@ -141,4 +170,4 @@ const ManufacturerForm: React.FC = () => {
   );
 };
 
-export default observer(ManufacturerForm);
+export default observer(CategoryForm);

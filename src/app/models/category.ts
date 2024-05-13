@@ -1,9 +1,12 @@
+import { Manufacturer } from "./manufacturer";
+
 export interface ICategory {
   id: string;
   name: string;
   description: string;
   imageUrl?: string;
   manufacturerId: string;
+  manufacturer: Manufacturer;
   isActive: boolean;
 }
 
@@ -13,6 +16,7 @@ export class Category implements ICategory {
   description: string;
   imageUrl?: string;
   manufacturerId: string;
+  manufacturer: Manufacturer;
   isActive: boolean;
 
   constructor(init: CategoryFormValues) {

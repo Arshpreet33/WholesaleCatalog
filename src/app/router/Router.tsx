@@ -14,6 +14,9 @@ import ProductsDashboard from "../features/products/dashboard/ProductsDashboard.
 import ManufacturerDashboard from "../../features/admin/manufacturers/dashboard/ManufacturerDashboard.tsx";
 import ManufacturerDetails from "../../features/admin/manufacturers/details/ManufacturerDetails.tsx";
 import ManufacturerForm from "../../features/admin/manufacturers/form/ManufacturerForm.tsx";
+import CategoryDashboard from "../../features/admin/categories/dashboard/CategoryDashboard.tsx";
+import CategoryDetails from "../../features/admin/categories/details/CategoryDetails.tsx";
+import CategoryForm from "../../features/admin/categories/form/CategoryForm.tsx";
 
 export const Routes: RouteObject[] = [
   {
@@ -47,6 +50,15 @@ export const Routes: RouteObject[] = [
                   { path: ":id", element: <ManufacturerDetails /> },
                   { path: "create", element: <ManufacturerForm /> },
                   { path: "edit/:id", element: <ManufacturerForm /> },
+                ],
+              },
+              {
+                path: "categories",
+                children: [
+                  { path: "", element: <CategoryDashboard /> },
+                  { path: ":id", element: <CategoryDetails /> },
+                  { path: "create", element: <CategoryForm /> },
+                  { path: "edit/:id", element: <CategoryForm /> },
                 ],
               },
             ],
