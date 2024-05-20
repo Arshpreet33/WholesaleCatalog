@@ -41,8 +41,8 @@ export default class AppUserStore {
     }
   };
 
-  getAppUserByUsername = (username: string) => {
-    return this.appUsers.find((appUser) => appUser.username === username);
+  getAppUserByUserName = (userName: string) => {
+    return this.appUsers.find((appUser) => appUser.userName === userName);
   };
 
   saveAppUser = async (appUser: AppUserFormValues) => {
@@ -63,7 +63,7 @@ export default class AppUserStore {
       await agent.AppUsers.edit(appUser);
       runInAction(() => {
         let updatedAppUser = {
-          ...this.getAppUserByUsername(appUser.username!),
+          ...this.getAppUserByUserName(appUser.userName!),
           appUser,
         };
         this.selectedAppUser = updatedAppUser as AppUser;
@@ -76,15 +76,15 @@ export default class AppUserStore {
     }
   };
 
-  loadAppUserByUsername = async (username: string) => {
-    let appUser = this.getAppUserByUsername(username);
+  loadAppUserByUserName = async (userName: string) => {
+    let appUser = this.getAppUserByUserName(userName);
     if (appUser) {
       this.selectedAppUser = appUser;
       return appUser;
     } else {
       this.setLoadingInitial(true);
       try {
-        const appUser = await agent.AppUsers.details(username);
+        const appUser = await agent.AppUsers.details(userName);
         runInAction(() => {
           this.selectedAppUser = appUser;
         });
@@ -97,13 +97,13 @@ export default class AppUserStore {
     }
   };
 
-  toggleActive = async (username: string) => {
+  toggleActive = async (userName: string) => {
     this.setSubmitting(true);
     try {
-      await agent.AppUsers.toggleActive(username);
+      await agent.AppUsers.toggleActive(userName);
       runInAction(() => {
-        this.appUsers.find((a) => a.username === username)!.isActive =
-          !this.appUsers.find((a) => a.username === username)!.isActive;
+        this.appUsers.find((a) => a.userName === userName)!.isActive =
+          !this.appUsers.find((a) => a.userName === userName)!.isActive;
         this.setSubmitting(false);
       });
     } catch (error) {

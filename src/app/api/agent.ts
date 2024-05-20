@@ -153,14 +153,14 @@ const AppUsers = {
     axios
       .get<PaginatedResults<AppUser[]>>(userUrl, { params })
       .then(responseBody),
-  details: (username: string) =>
-    requests.get<AppUser>(userUrl + "/" + username),
+  details: (userName: string) =>
+    requests.get<AppUser>(userUrl + "/" + userName),
   create: (user: AppUserFormValues) => requests.post<void>(userUrl, user),
   edit: (user: AppUserFormValues) =>
-    requests.put<void>(userUrl + "/" + user.username, user),
-  // delete: (username: string) => requests.del<void>(userUrl + "/" + username),
-  toggleActive: (username: string) =>
-    requests.toggleActive<void>(userUrl + "/toggle/" + username),
+    requests.put<void>(userUrl + "/" + user.userName, user),
+  // delete: (userName: string) => requests.del<void>(userUrl + "/" + userName),
+  toggleActive: (userName: string) =>
+    requests.toggleActive<void>(userUrl + "/toggle/" + userName),
 };
 
 const Account = {

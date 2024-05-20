@@ -9,14 +9,14 @@ import { useStore } from "../../../../app/stores/store.ts";
 import { observer } from "mobx-react-lite";
 
 const enum DISPLAY_NAMES {
-  username = "UserName",
+  userName = "UserName",
   displayName = "Display Name",
   email = "Email",
   bio = "Bio",
 }
 
 const enum FIELD_NAMES {
-  username = "username",
+  userName = "userName",
   displayName = "displayName",
   email = "email",
   bio = "bio",
@@ -31,7 +31,7 @@ const AppUserForm: React.FC = () => {
     loadingInitial,
     setPagingParams,
     setEditMode,
-    loadAppUserByUsername,
+    loadAppUserByUserName,
     updateAppUser,
     saveAppUser,
   } = appUserStore;
@@ -44,7 +44,7 @@ const AppUserForm: React.FC = () => {
       pageNumber: 1,
       pageSize: pagingParams.pageSize,
     });
-    navigate("/admin/appUsers");
+    navigate("/admin/users");
   };
 
   const handleCreateOrEditAppUser = (appUser: AppUserFormValues) => {
@@ -57,7 +57,7 @@ const AppUserForm: React.FC = () => {
 
   useEffect(() => {
     if (username) {
-      loadAppUserByUsername(username).then((appUser) => {
+      loadAppUserByUserName(username).then((appUser) => {
         setAppUser(new AppUserFormValues(appUser));
       });
       setEditMode(true);
@@ -65,10 +65,10 @@ const AppUserForm: React.FC = () => {
       setAppUser(new AppUserFormValues());
       setEditMode(false);
     }
-  }, [username, loadAppUserByUsername, setEditMode]);
+  }, [username, loadAppUserByUserName, setEditMode]);
 
   const validationSchema = Yup.object({
-    username: Yup.string().required("Required"),
+    userName: Yup.string().required("Required"),
     displayName: Yup.string().required("Required"),
     email: Yup.string().email("Invalid email address").required("Required"),
     bio: Yup.string(),
@@ -92,8 +92,8 @@ const AppUserForm: React.FC = () => {
               <Grid container spacing={3} direction="column">
                 <Grid item>
                   <MyTextInput
-                    name={FIELD_NAMES.username}
-                    label={DISPLAY_NAMES.username}
+                    name={FIELD_NAMES.userName}
+                    label={DISPLAY_NAMES.userName}
                     disabled={editMode}
                   />
                 </Grid>

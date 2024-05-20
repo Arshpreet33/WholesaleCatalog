@@ -25,7 +25,7 @@ const AppUserFilters: React.FC = () => {
     loadAppUsers();
   };
 
-  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUserNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNameFilter(event.target.value);
     loadFilteredUsers();
   };
@@ -39,9 +39,9 @@ const AppUserFilters: React.FC = () => {
     <div>
       <div className="app-user-filters">
         <SearchBar
-          label="Search by username, display name, or email"
+          label="Search by userName, Display Name, or email"
           value={nameFilter}
-          onChange={handleUsernameChange}
+          onChange={handleUserNameChange}
           className="search-bar"
         />
         <FormControlLabel

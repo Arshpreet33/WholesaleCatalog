@@ -43,8 +43,8 @@ const AppUserList: React.FC = () => {
     value: number
   ) => navigateToHome(value);
 
-  const handleToggle = (username: string) => {
-    toggleActive(username).then(() => navigateToHome(1));
+  const handleToggle = (userName: string) => {
+    toggleActive(userName).then(() => navigateToHome(1));
   };
 
   useEffect(() => {
@@ -100,25 +100,25 @@ const AppUserList: React.FC = () => {
             {appUsers &&
               appUsers.map((user) => (
                 <TableRow
-                  key={user.username}
+                  key={user.userName}
                   sx={{
                     "&:hover": {
                       backgroundColor: "rgba(0, 0, 0, 0.04)", // Change this to the color you want
                     },
                   }}
                 >
-                  <TableCell>{user.username}</TableCell>
+                  <TableCell>{user.userName}</TableCell>
                   <TableCell>{user.displayName}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.isActive.toString()}</TableCell>
                   <TableCell>{user.bio}</TableCell>
                   <TableCell>
-                    <IconButton component={Link} to={`edit/${user.username}`}>
+                    <IconButton component={Link} to={`edit/${user.userName}`}>
                       <EditIcon />
                     </IconButton>
                   </TableCell>
                   <TableCell>
-                    <IconButton onClick={() => handleToggle(user.username)}>
+                    <IconButton onClick={() => handleToggle(user.userName)}>
                       <SwapHorizIcon />
                     </IconButton>
                   </TableCell>

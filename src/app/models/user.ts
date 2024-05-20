@@ -1,5 +1,5 @@
 export interface IUser {
-  username: string;
+  userName: string;
   displayName: string;
   token: string;
   image?: string;
@@ -8,12 +8,12 @@ export interface IUser {
 export interface ILoginFormValues {
   email: string;
   password: string;
-  username?: string;
+  userName?: string;
   displayName?: string;
 }
 
 export interface IAppUser {
-  username: string;
+  userName: string;
   displayName: string;
   email: string;
   isActive: boolean;
@@ -21,7 +21,7 @@ export interface IAppUser {
 }
 
 export class AppUser implements IAppUser {
-  username: string;
+  userName: string;
   displayName: string;
   email: string;
   isActive: boolean;
@@ -33,14 +33,14 @@ export class AppUser implements IAppUser {
 }
 
 export class AppUserFormValues {
-  username: string = "";
+  userName: string = "";
   displayName: string = "";
   email: string = "";
   bio: string = "";
 
   constructor(user?: AppUserFormValues) {
     if (user) {
-      this.username = user.username;
+      this.userName = user.userName;
       this.displayName = user.displayName;
       this.email = user.email;
       this.bio = user.bio ?? "";
