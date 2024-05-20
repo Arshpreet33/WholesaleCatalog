@@ -80,8 +80,13 @@ const LoginForm = () => {
           >
             {({ handleSubmit, isValid, isSubmitting, dirty, errors }) => (
               <StyledForm onSubmit={handleSubmit} autoComplete="off">
-                <MyTextInput name="email" label="Email" />
-                <MyTextInput name="password" label="Password" type="password" />
+                <MyTextInput name="email" label="Email" fullWidth />
+                <MyTextInput
+                  name="password"
+                  label="Password"
+                  type="password"
+                  fullWidth
+                />
                 <ErrorMessage
                   name="error"
                   render={() => (

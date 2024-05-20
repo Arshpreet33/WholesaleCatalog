@@ -8,6 +8,7 @@ interface MyTextInputProps {
   rows?: number;
   type?: string;
   fullWidth?: boolean;
+  disabled?: boolean;
   select?: boolean;
   list?: any[];
   defaultValue?: string;
@@ -19,6 +20,7 @@ const MyTextInput: React.FC<MyTextInputProps> = ({
   rows,
   type,
   fullWidth,
+  disabled,
   select,
   list,
   defaultValue,
@@ -43,6 +45,7 @@ const MyTextInput: React.FC<MyTextInputProps> = ({
         label={label}
         id={id}
         fullWidth={fullWidth}
+        disabled={disabled}
         select={select}
         defaultValue={defaultValue}
         minRows={rows ? 2 : undefined}

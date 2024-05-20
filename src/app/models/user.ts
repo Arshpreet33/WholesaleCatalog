@@ -25,7 +25,7 @@ export class AppUser implements IAppUser {
   displayName: string;
   email: string;
   isActive: boolean;
-  bio?: string;
+  bio: string;
 
   constructor(init: AppUserFormValues) {
     Object.assign(this, init);

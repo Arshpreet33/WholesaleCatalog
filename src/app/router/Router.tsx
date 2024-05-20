@@ -19,6 +19,8 @@ import CategoryForm from "../../features/admin/categories/form/CategoryForm.tsx"
 import ProductDetails from "../../features/admin/products/details/ProductDetails.tsx";
 import ProductForm from "../../features/admin/products/form/ProductForm.tsx";
 import ProductsDashboard from "../../features/admin/products/dashboard/ProductDashboard.tsx";
+import AppUserDashboard from "../../features/admin/users/dashboard/AppUserDashboard.tsx";
+import AppUserForm from "../../features/admin/users/form/AppUserForm.tsx";
 
 export const Routes: RouteObject[] = [
   {
@@ -70,6 +72,14 @@ export const Routes: RouteObject[] = [
                   { path: ":id", element: <ProductDetails /> },
                   { path: "create", element: <ProductForm /> },
                   { path: "edit/:id", element: <ProductForm /> },
+                ],
+              },
+              {
+                path: "users",
+                children: [
+                  { path: "", element: <AppUserDashboard /> },
+                  { path: "create", element: <AppUserForm /> },
+                  { path: "edit/:username", element: <AppUserForm /> },
                 ],
               },
             ],
