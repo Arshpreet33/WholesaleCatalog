@@ -1,11 +1,11 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { User, UserFormValues } from "../models/user.ts";
+import { IUser, ILoginFormValues } from "../models/user.ts";
 import agent from "../api/agent.ts";
 import { store } from "./store.ts";
 import { Router } from "../router/Router.tsx";
 
 export default class UserStore {
-  user: User | null = null;
+  user: IUser | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -15,7 +15,7 @@ export default class UserStore {
     return !!this.user;
   }
 
-  login = async (creds: UserFormValues) => {
+  login = async (creds: ILoginFormValues) => {
     const user = await agent.Account.login(creds);
     store.commonStore.setToken(user.token);
     runInAction(() => {

@@ -2,7 +2,12 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { Client, ClientFormValues } from "../models/client.ts";
 import { PaginatedResults } from "../models/pagination.ts";
-import { User, UserFormValues } from "../models/user.ts";
+import {
+  IUser,
+  ILoginFormValues,
+  AppUser,
+  AppUserFormValues,
+} from "../models/user.ts";
 import { store } from "../stores/store.ts";
 import { Router } from "../router/Router.tsx";
 import {
@@ -10,7 +15,7 @@ import {
   ManufacturerFormValues,
 } from "../models/manufacturer.ts";
 import { Category, CategoryFormValues } from "../models/category.ts";
-import { Product } from "../models/product.ts";
+import { Product, ProductFormValues } from "../models/product.ts";
 
 axios.defaults.baseURL = "http://localhost:2030/api";
 
@@ -41,7 +46,7 @@ axios.interceptors.response.use(
           Router.navigate("/not-found");
         }
         if (data.errors) {
-          const modalStateErrors = [];
+          const modalStateErrors: string[] = []; // Define modalStateErrors as an array of strings
           for (const key in data.errors) {
             if (data.errors[key]) modalStateErrors.push(data.errors[key]);
           }
@@ -142,9 +147,26 @@ const Products = {
     requests.toggleActive<void>(productUrl + "/toggle/" + id),
 };
 
+const userUrl = "/users";
+const AppUsers = {
+  list: (params: URLSearchParams) =>
+    axios
+      .get<PaginatedResults<AppUser[]>>(userUrl, { params })
+      .then(responseBody),
+  details: (username: string) =>
+    requests.get<AppUser>(userUrl + "/" + username),
+  create: (user: AppUserFormValues) => requests.post<void>(userUrl, user),
+  edit: (user: AppUserFormValues) =>
+    requests.put<void>(userUrl + "/" + user.username, user),
+  // delete: (username: string) => requests.del<void>(userUrl + "/" + username),
+  toggleActive: (username: string) =>
+    requests.toggleActive<void>(userUrl + "/toggle/" + username),
+};
+
 const Account = {
-  current: () => requests.get<User>("/account"),
-  login: (user: UserFormValues) => requests.post<User>("/account/login", user),
+  current: () => requests.get<IUser>("/account"),
+  login: (user: ILoginFormValues) =>
+    requests.post<IUser>("/account/login", user),
   // register: (user: UserFormValues) =>
   //   requests.post<User>('/account/register', user),
 };
@@ -154,6 +176,7 @@ const agent = {
   Manufacturers,
   Categories,
   Products,
+  AppUsers,
   Account,
 };
 
