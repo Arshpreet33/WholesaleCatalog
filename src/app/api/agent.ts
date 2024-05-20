@@ -10,6 +10,7 @@ import {
   ManufacturerFormValues,
 } from "../models/manufacturer.ts";
 import { Category, CategoryFormValues } from "../models/category.ts";
+import { Product } from "../models/product.ts";
 
 axios.defaults.baseURL = "http://localhost:2030/api";
 
@@ -125,6 +126,22 @@ const Categories = {
     requests.toggleActive<void>(categoryURL + "/toggle/" + id),
 };
 
+const productUrl = "/products";
+const Products = {
+  list: (params: URLSearchParams) =>
+    axios
+      .get<PaginatedResults<Product[]>>(productUrl, { params })
+      .then(responseBody),
+  details: (id: string) => requests.get<Product>(productUrl + "/" + id),
+  create: (product: ProductFormValues) =>
+    requests.post<void>(productUrl, product),
+  edit: (product: ProductFormValues) =>
+    requests.put<void>(productUrl + "/" + product.id, product),
+  delete: (id: string) => requests.del<void>(productUrl + "/" + id),
+  toggleActive: (id: string) =>
+    requests.toggleActive<void>(productUrl + "/toggle/" + id),
+};
+
 const Account = {
   current: () => requests.get<User>("/account"),
   login: (user: UserFormValues) => requests.post<User>("/account/login", user),
@@ -136,6 +153,7 @@ const agent = {
   Clients,
   Manufacturers,
   Categories,
+  Products,
   Account,
 };
 

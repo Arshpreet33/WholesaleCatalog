@@ -50,7 +50,6 @@ const MyTextInput: React.FC<MyTextInputProps> = ({
         helperText={meta.touched && meta.error}
       >
         {list?.map((item) => {
-          console.log(item);
           return (
             <MenuItem key={item.id} value={item.id}>
               {item.name}

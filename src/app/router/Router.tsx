@@ -10,13 +10,15 @@ import RequireAuth from "./RequireAuth.tsx";
 import NotFound from "../../features/errors/NotFound.tsx";
 import ServerError from "../../features/errors/ServerError.tsx";
 import HomePage from "../../features/home/HomePage.tsx";
-import ProductsDashboard from "../features/products/dashboard/ProductsDashboard.tsx";
 import ManufacturerDashboard from "../../features/admin/manufacturers/dashboard/ManufacturerDashboard.tsx";
 import ManufacturerDetails from "../../features/admin/manufacturers/details/ManufacturerDetails.tsx";
 import ManufacturerForm from "../../features/admin/manufacturers/form/ManufacturerForm.tsx";
 import CategoryDashboard from "../../features/admin/categories/dashboard/CategoryDashboard.tsx";
 import CategoryDetails from "../../features/admin/categories/details/CategoryDetails.tsx";
 import CategoryForm from "../../features/admin/categories/form/CategoryForm.tsx";
+import ProductDetails from "../../features/admin/products/details/ProductDetails.tsx";
+import ProductForm from "../../features/admin/products/form/ProductForm.tsx";
+import ProductsDashboard from "../../features/admin/products/dashboard/ProductDashboard.tsx";
 
 export const Routes: RouteObject[] = [
   {
@@ -59,6 +61,15 @@ export const Routes: RouteObject[] = [
                   { path: ":id", element: <CategoryDetails /> },
                   { path: "create", element: <CategoryForm /> },
                   { path: "edit/:id", element: <CategoryForm /> },
+                ],
+              },
+              {
+                path: "products",
+                children: [
+                  { path: "", element: <ProductsDashboard /> },
+                  { path: ":id", element: <ProductDetails /> },
+                  { path: "create", element: <ProductForm /> },
+                  { path: "edit/:id", element: <ProductForm /> },
                 ],
               },
             ],
