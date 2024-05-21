@@ -2,14 +2,14 @@ export interface IUser {
   userName: string;
   displayName: string;
   token: string;
-  image?: string;
+  role: string;
+  imageUrl?: string;
 }
 
 export interface ILoginFormValues {
-  email: string;
+  userName: string;
   password: string;
-  userName?: string;
-  displayName?: string;
+  role: string;
 }
 
 export interface IAppUser {

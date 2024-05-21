@@ -1,18 +1,39 @@
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Navigate, useLocation } from "react-router-dom";
 import { useStore } from "../stores/store.ts";
-import React from "react";
+import { observer } from "mobx-react-lite";
+import { CircularProgress } from "@mui/material";
 
-const RequireAuth = () => {
-  const {
-    userStore: { isLoggedIn },
-  } = useStore();
+interface RequireAuthProps {
+  role?: string;
+  children: React.ReactNode;
+}
+
+const RequireAuth: React.FC<RequireAuthProps> = ({ role, children }) => {
+  const { commonStore, userStore } = useStore();
+
+  const { isLoggedIn, user, getUser } = userStore;
+
   const location = useLocation();
 
-  if (!isLoggedIn) {
-    return <Navigate to="/" state={{ from: location }} />;
+  useEffect(() => {
+    if (commonStore.token) getUser().finally(() => commonStore.setAppLoaded());
+    else commonStore.setAppLoaded();
+  }, [commonStore, getUser]);
+
+  if (!commonStore.appLoaded) {
+    return <CircularProgress />;
   }
 
-  return <Outlet />;
+  if (!isLoggedIn) {
+    return <Navigate to="/login" state={{ from: location }} />;
+  }
+
+  if (role && user?.role !== role) {
+    return <Navigate to="/un-authorized" state={{ from: location }} />;
+  }
+
+  return <>{children}</>;
 };
 
-export default RequireAuth;
+export default observer(RequireAuth);

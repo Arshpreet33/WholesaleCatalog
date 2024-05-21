@@ -21,7 +21,12 @@ export default class UserStore {
     runInAction(() => {
       this.user = user;
     });
-    Router.navigate("/admin");
+    // Check user role and navigate accordingly
+    if (this.user?.role === "Admin") {
+      Router.navigate("/admin");
+    } else {
+      Router.navigate("/user");
+    }
   };
 
   logout = () => {

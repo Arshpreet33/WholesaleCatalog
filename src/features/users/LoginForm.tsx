@@ -6,8 +6,11 @@ import {
   Button,
   Box,
   CircularProgress,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from "@mui/material";
-import { Formik, Form, ErrorMessage } from "formik";
+import { Formik, Form, ErrorMessage, Field } from "formik";
 import * as Yup from "yup";
 import React from "react";
 import MyTextInput from "../../app/common/form/MyTextInput.tsx";
@@ -37,14 +40,16 @@ const StyledButton = styled(Button)(({ theme }) => ({
 const LoginForm = () => {
   const { userStore } = useStore();
   const initialValues = {
-    email: "",
+    userName: "",
     password: "",
+    role: "user",
     error: null,
   };
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string().email("Invalid email").required("Email is required"),
+    userName: Yup.string().required("UserName is required"),
     password: Yup.string().required("Password is required"),
+    role: Yup.string().required("Role is required"),
   });
 
   return (
@@ -66,7 +71,7 @@ const LoginForm = () => {
     >
       <Container>
         <StyledPaper elevation={3}>
-          <StyledTypography variant="h5">Admin Login</StyledTypography>
+          <StyledTypography variant="h5">Login</StyledTypography>
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -74,19 +79,36 @@ const LoginForm = () => {
               try {
                 await userStore.login(values);
               } catch (error) {
-                setErrors({ error: "Invalid email or password" });
+                setErrors({ error: "Invalid UserName, Password, or Role" });
               }
             }}
           >
             {({ handleSubmit, isValid, isSubmitting, dirty, errors }) => (
               <StyledForm onSubmit={handleSubmit} autoComplete="off">
-                <MyTextInput name="email" label="Email" fullWidth />
+                <MyTextInput name="userName" label="UserName" fullWidth />
                 <MyTextInput
                   name="password"
                   label="Password"
                   type="password"
                   fullWidth
                 />
+                <Field name="role">
+                  {({ field }: { field: any }) => (
+                    <RadioGroup {...field} row>
+                      <FormControlLabel
+                        value="user"
+                        control={<Radio />}
+                        label="User"
+                        sx={{ mr: 6 }}
+                      />
+                      <FormControlLabel
+                        value="admin"
+                        control={<Radio />}
+                        label="Admin"
+                      />
+                    </RadioGroup>
+                  )}
+                </Field>
                 <ErrorMessage
                   name="error"
                   render={() => (

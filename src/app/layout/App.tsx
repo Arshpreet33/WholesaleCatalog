@@ -1,8 +1,7 @@
 import * as React from "react";
-import { CircularProgress, Container } from "@mui/material";
-import { Outlet } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
+import { Navigate } from "react-router-dom";
 import { useStore } from "../stores/store.ts";
-import LoginForm from "../../features/users/LoginForm.tsx";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 
@@ -19,7 +18,15 @@ const App = () => {
     return <CircularProgress />;
   }
 
-  return <>{userStore.isLoggedIn ? <Outlet /> : <LoginForm />}</>;
+  if (userStore.isLoggedIn) {
+    return userStore.user?.role === "Admin" ? (
+      <Navigate to="/admin" />
+    ) : (
+      <Navigate to="/user" />
+    );
+  }
+
+  return <Navigate to="/login" />;
 };
 
 export default observer(App);
