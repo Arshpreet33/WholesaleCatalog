@@ -1,11 +1,9 @@
-import React from "react";
+import * as React from "react";
+import { observer } from "mobx-react-lite";
+import Dashboard from "./Dashboard.tsx";
 
-const UserDashboard: React.FC = () => {
-  return (
-    <div>
-      <h1>User Dashboard</h1>
-    </div>
-  );
+const UserDashboard = () => {
+  return <Dashboard></Dashboard>;
 };
 
-export default UserDashboard;
+export default observer(UserDashboard);

@@ -9,7 +9,7 @@ import ClientDetails from "../../features/admin/clients/details/ClientDetails.ts
 import RequireAuth from "./RequireAuth.tsx";
 import NotFound from "../../features/errors/NotFound.tsx";
 import ServerError from "../../features/errors/ServerError.tsx";
-import HomePage from "../../features/home/HomePage.tsx";
+import HomePage from "../../features/user/home/HomePage.tsx";
 import ManufacturerDashboard from "../../features/admin/manufacturers/dashboard/ManufacturerDashboard.tsx";
 import ManufacturerDetails from "../../features/admin/manufacturers/details/ManufacturerDetails.tsx";
 import ManufacturerForm from "../../features/admin/manufacturers/form/ManufacturerForm.tsx";
@@ -24,6 +24,7 @@ import AppUserForm from "../../features/admin/users/form/AppUserForm.tsx";
 import UserDashboard from "../layout/UserDashboard.tsx";
 import UnAuthorized from "../../features/errors/UnAuthorized.tsx";
 import LoginForm from "../../features/users/LoginForm.tsx";
+import PlaceOrder from "../../features/user/placeOrder/PlaceOrder.tsx";
 
 export const Routes: RouteObject[] = [
   {
@@ -101,6 +102,7 @@ export const Routes: RouteObject[] = [
     children: [
       { path: "", element: <HomePage /> },
       { path: "home", element: <HomePage /> },
+      { path: "placeorder", element: <PlaceOrder /> },
     ],
   },
 
