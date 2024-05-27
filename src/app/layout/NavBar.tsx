@@ -4,9 +4,9 @@ import {
   Avatar,
   Badge,
   Box,
-  Button,
   Container,
   IconButton,
+  Link,
   Menu,
   MenuItem,
   Toolbar,
@@ -19,9 +19,8 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../stores/store.ts";
 
-const pages = ["Products", "My Orders"];
 const settings = ["Profile", "Account", "Logout"];
-const AppName = "WHOLESALE CATALOGUE 2024";
+const AppName = "SALES CATALOGUE";
 
 const NavBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -30,7 +29,7 @@ const NavBar = () => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
-  const { userStore } = useStore();
+  const { userStore, cartStore } = useStore();
 
   const handleOpenNavMenu = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
@@ -59,33 +58,6 @@ const NavBar = () => {
       console.log("Cart");
     },
     []
-  );
-
-  const NavMenu = ({ anchorEl, handleClose }) => (
-    <Menu
-      id="menu-appbar"
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "left",
-      }}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "left",
-      }}
-      open={Boolean(anchorEl)}
-      onClose={handleClose}
-      sx={{
-        display: { xs: "block", md: "none" },
-      }}
-    >
-      {pages.map((page) => (
-        <MenuItem key={page} onClick={handleClose}>
-          {page}
-        </MenuItem>
-      ))}
-    </Menu>
   );
 
   const UserMenu = ({ anchorEl, handleClose }) => (
@@ -150,19 +122,6 @@ const NavBar = () => {
           >
             {AppName}
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <NavMenu anchorEl={anchorElNav} handleClose={handleCloseNavMenu} />
-          </Box>
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
             variant="h5"
@@ -182,27 +141,17 @@ const NavBar = () => {
           >
             {AppName}
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Cart">
               <IconButton
                 size="large"
                 color="inherit"
                 aria-label="4 items in Cart"
-                onClick={handleCartBtnClick}
+                // component={Link}
+                // to={`/admin/products`}
                 sx={{ p: 0, mr: 3 }}
               >
-                <Badge badgeContent={4} color="error">
+                <Badge badgeContent={cartStore.cartItems.length} color="error">
                   <ShoppingCartIcon sx={{ mr: 0.5 }} />
                 </Badge>
               </IconButton>

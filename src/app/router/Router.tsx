@@ -24,7 +24,8 @@ import AppUserForm from "../../features/admin/users/form/AppUserForm.tsx";
 import UserDashboard from "../layout/UserDashboard.tsx";
 import UnAuthorized from "../../features/errors/UnAuthorized.tsx";
 import LoginForm from "../../features/users/LoginForm.tsx";
-import PlaceOrder from "../../features/user/placeOrder/PlaceOrder.tsx";
+import PlaceOrderDashboard from "../../features/user/placeOrder/PlaceOrderDashboard.tsx";
+import CartDashboard from "../../features/user/cart/CartDashboard.tsx";
 
 export const Routes: RouteObject[] = [
   {
@@ -102,7 +103,8 @@ export const Routes: RouteObject[] = [
     children: [
       { path: "", element: <HomePage /> },
       { path: "home", element: <HomePage /> },
-      { path: "placeorder", element: <PlaceOrder /> },
+      { path: "placeorder", element: <PlaceOrderDashboard /> },
+      { path: "cart", element: <CartDashboard /> },
     ],
   },
 

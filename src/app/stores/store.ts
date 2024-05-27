@@ -6,6 +6,7 @@ import ManufacturerStore from "./manufacturerStore.ts";
 import CategoryStore from "./categoryStore.ts";
 import ProductStore from "./productStore.ts";
 import AppUserStore from "./appUserStore.ts";
+import CartStore from "./cartStore.ts";
 
 interface Store {
   clientStore: ClientStore;
@@ -15,6 +16,7 @@ interface Store {
   appUserStore: AppUserStore;
   userStore: UserStore;
   commonStore: CommonStore;
+  cartStore: CartStore;
 }
 
 export const store: Store = {
@@ -25,6 +27,7 @@ export const store: Store = {
   appUserStore: new AppUserStore(),
   userStore: new UserStore(),
   commonStore: new CommonStore(),
+  cartStore: new CartStore(),
 };
 
 export const StoreContext = createContext(store);

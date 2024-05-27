@@ -1,4 +1,4 @@
-# WholesaleCatalog
+# Sales Catalog
 React front-end app
 =======
 # Getting Started with Create React App

@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
 import {
-  FormControlLabel,
-  Switch,
   Select,
   MenuItem,
   FormControl,
@@ -9,16 +7,15 @@ import {
   SelectChangeEvent,
   CircularProgress,
 } from "@mui/material";
-import SearchBar from "../../../../app/common/form/SearchBar.tsx";
+import SearchBar from "../../../app/common/form/SearchBar.tsx";
 import "./styles.css";
-import { useStore } from "../../../../app/stores/store.ts";
+import { useStore } from "../../../app/stores/store.ts";
 import { observer } from "mobx-react-lite";
 
-const ProductFilters: React.FC = () => {
+const PlaceOrderFilters: React.FC = () => {
   const { productStore } = useStore();
   const {
     nameFilter,
-    isActiveFilter,
     loadingFilters,
     categories,
     categoryIdFilter,
@@ -26,7 +23,6 @@ const ProductFilters: React.FC = () => {
     manufacturerIdFilter,
     loadActiveCategories,
     setNameFilter,
-    setIsActiveFilter,
     setPagingParams,
     loadProducts,
     setCategoryIdFilter,
@@ -44,11 +40,6 @@ const ProductFilters: React.FC = () => {
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNameFilter(event.target.value);
-    loadFilteredProducts();
-  };
-
-  const handleIsActiveChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsActiveFilter(event.target.checked);
     loadFilteredProducts();
   };
 
@@ -78,12 +69,6 @@ const ProductFilters: React.FC = () => {
           value={nameFilter}
           onChange={handleNameChange}
           className="search-bar"
-        />
-        <FormControlLabel
-          control={
-            <Switch checked={isActiveFilter} onChange={handleIsActiveChange} />
-          }
-          label="Active"
         />
         <FormControl>
           <InputLabel id="demo-simple-select-label">Manufacturer</InputLabel>
@@ -132,4 +117,4 @@ const ProductFilters: React.FC = () => {
   );
 };
 
-export default observer(ProductFilters);
+export default observer(PlaceOrderFilters);

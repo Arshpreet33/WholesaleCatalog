@@ -45,6 +45,27 @@ export default class ClientStore {
     }
   };
 
+  loadActiveClients = async () => {
+    this.setLoadingInitial(true);
+    try {
+      // Create a new URLSearchParams instance
+      let params = new URLSearchParams();
+      params.append("isActive", String(this.isActiveFilter));
+
+      const response = await agent.Clients.list(params);
+
+      runInAction(() => {
+        this.setClients(response.data);
+        this.setLoadingInitial(false);
+      });
+    } catch (error) {
+      console.log(error);
+      runInAction(() => {
+        this.setLoadingInitial(false);
+      });
+    }
+  };
+
   getClientById = (id: string) => {
     return this.clients.find((client) => client.id === id);
   };
