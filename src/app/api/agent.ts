@@ -17,7 +17,9 @@ import {
 import { Category, CategoryFormValues } from "../models/category.ts";
 import { Product, ProductFormValues } from "../models/product.ts";
 
-axios.defaults.baseURL = "http://localhost:2030/api";
+//axios.defaults.baseURL = "http://localhost:2030/api";
+
+axios.defaults.baseURL = "https://wholesale-api.o2p.dev/api";
 
 axios.interceptors.request.use((config) => {
   const token = store.commonStore.token;
