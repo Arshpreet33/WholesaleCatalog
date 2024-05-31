@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useStore } from "../../../app/stores/store.ts";
+import { observer } from "mobx-react-lite";
 
 const CartDashboard: React.FC = () => {
   const { cartStore, commonStore } = useStore();
@@ -92,4 +93,4 @@ const CartDashboard: React.FC = () => {
   );
 };
 
-export default CartDashboard;
+export default observer(CartDashboard);
