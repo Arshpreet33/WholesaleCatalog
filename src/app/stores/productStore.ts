@@ -3,12 +3,18 @@ import { Product, ProductFormValues } from "../models/product";
 import agent from "../api/agent.ts";
 import { Pagination, PagingParams } from "../models/pagination.ts";
 import { Category } from "../models/category.ts";
+import { Manufacturer } from "../models/manufacturer.ts";
+import { store } from "./store.ts";
+import { CartItem } from "../models/cartItem.ts";
 
 export default class ProductStore {
   products: Product[] = [];
+  placeOrderProducts: CartItem[] = [];
+  manufacturers: Manufacturer[] = [];
   categories: Category[] = [];
   selectedProduct: Product | undefined = undefined;
   editMode = false;
+  placeOrderMode = false;
   loadingInitial = true;
   loadingFilters = true;
   submitting = false;
@@ -17,6 +23,7 @@ export default class ProductStore {
   isActiveFilter = true;
   nameFilter = "";
   categoryIdFilter = "";
+  manufacturerIdFilter = "";
 
   constructor() {
     makeAutoObservable(this);
@@ -27,8 +34,13 @@ export default class ProductStore {
       let params = new URLSearchParams();
 
       if (this.nameFilter) params.append("name", this.nameFilter);
-      if (this.categoryIdFilter)
+      if (this.categoryIdFilter) {
         params.append("categoryId", this.categoryIdFilter);
+      } else {
+        if (this.manufacturerIdFilter) {
+          params.append("manufacturerId", this.manufacturerIdFilter);
+        }
+      }
       params.append("isActive", String(this.isActiveFilter));
       params.append("pageNumber", this.pagingParams.pageNumber.toString());
       params.append("pageSize", this.pagingParams.pageSize.toString());
@@ -40,6 +52,7 @@ export default class ProductStore {
         this.setPagination(response.pagination);
         this.setLoadingInitial(false);
       });
+      if (this.placeOrderMode) this.loadPlaceOrderProducts();
     } catch (error) {
       console.log(error);
       runInAction(() => {
@@ -52,11 +65,32 @@ export default class ProductStore {
     try {
       const params = new URLSearchParams();
       params.append("isActive", "true");
+      if (this.manufacturerIdFilter)
+        params.append("manufacturerId", this.manufacturerIdFilter);
 
       const response = await agent.Categories.list(params);
 
       runInAction(() => {
         this.setCategories(response.data);
+        this.setLoadingFilters(false);
+      });
+    } catch (error) {
+      console.log(error);
+      runInAction(() => {
+        this.setLoadingFilters(false);
+      });
+    }
+  };
+
+  loadActiveManufacturers = async () => {
+    try {
+      const params = new URLSearchParams();
+      params.append("isActive", "true");
+
+      const response = await agent.Manufacturers.list(params);
+
+      runInAction(() => {
+        this.setManufacturers(response.data);
         this.setLoadingFilters(false);
       });
     } catch (error) {
@@ -153,8 +187,67 @@ export default class ProductStore {
     }
   };
 
+  loadPlaceOrderProducts = async () => {
+    runInAction(() => {
+      // this.setProducts(
+      //   this.products.map((product) => ({
+      //     ...product,
+      //     addedToCart: store.cartStore.cartItems.some(
+      //       (cartItem) => cartItem.product.id === product.id
+      //     ),
+      //   }))
+      // );
+      this.setPlaceOrderProducts(
+        this.products.map((product) => ({
+          id: product.id,
+          product,
+          addedToCart: store.cartStore.cartItems.some(
+            (cartItem) => cartItem.product.id === product.id
+          ),
+          quantity: 1,
+          price: product.casePrice,
+          byCase: true,
+        }))
+      );
+    });
+  };
+
+  removePlaceOrderProductFromCart = (id: string) => {
+    runInAction(() => {
+      // this.setProducts(
+      //   this.products.map((product) =>
+      //     product.id === id ? { ...product, addedToCart: false } : product
+      //   )
+      // );
+      this.setPlaceOrderProducts(
+        this.placeOrderProducts.map((item) =>
+          item.id === id ? { ...item, addedToCart: false } : item
+        )
+      );
+    });
+  };
+
+  addPlaceOrderProductToCart = (id: string) => {
+    runInAction(() => {
+      // this.setProducts(
+      //   this.products.map((product) =>
+      //     product.id === id ? { ...product, addedToCart: true } : product
+      //   )
+      // );
+      this.setPlaceOrderProducts(
+        this.placeOrderProducts.map((item) =>
+          item.id === id ? { ...item, addedToCart: true } : item
+        )
+      );
+    });
+  };
+
   setEditMode = (editMode: boolean) => {
     this.editMode = editMode;
+  };
+
+  setPlaceOrderMode = (placeOrderMode: boolean) => {
+    this.placeOrderMode = placeOrderMode;
   };
 
   setSubmitting = (submitting: boolean) => {
@@ -185,12 +278,24 @@ export default class ProductStore {
     this.categoryIdFilter = value;
   };
 
+  setManufacturerIdFilter = (value: string) => {
+    this.manufacturerIdFilter = value;
+  };
+
   setProducts = (products: Product[]) => {
     this.products = products;
   };
 
+  setPlaceOrderProducts = (products: CartItem[]) => {
+    this.placeOrderProducts = products;
+  };
+
   setCategories = (categories: Category[]) => {
     this.categories = categories;
+  };
+
+  setManufacturers = (manufacturers: Manufacturer[]) => {
+    this.manufacturers = manufacturers;
   };
 
   setLoadingFilters = (loadingFilters: boolean) => {

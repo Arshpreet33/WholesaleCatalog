@@ -104,16 +104,6 @@ const ProductList: React.FC = () => {
               </TableCell>
               <TableCell>
                 <Typography variant="h6" sx={{ color: "white" }}>
-                  Items in Stock
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="h6" sx={{ color: "white" }}>
-                  Cases in Stock
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="h6" sx={{ color: "white" }}>
                   Active
                 </Typography>
               </TableCell>
@@ -162,8 +152,6 @@ const ProductList: React.FC = () => {
                   <TableCell>{product.unitWeight}g</TableCell>
                   <TableCell>{product.itemsInCase}</TableCell>
                   <TableCell>${product.casePrice}</TableCell>
-                  <TableCell>{product.itemsInStock}</TableCell>
-                  <TableCell>{product.casesInStock}</TableCell>
                   <TableCell>{product.isActive.toString()}</TableCell>
                   <TableCell>{product.category.name}</TableCell>
                   <TableCell>

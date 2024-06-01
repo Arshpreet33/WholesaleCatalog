@@ -1,10 +1,13 @@
 import { makeAutoObservable, reaction } from "mobx";
 import { ServerError } from "../models/serverError.ts";
+import { Client } from "../models/client.ts";
 
 export default class CommonStore {
   error: ServerError | null = null;
   token: string | null = localStorage.getItem("jwt");
   appLoaded = false;
+  isOrderMode = false;
+  selectedClient: Client | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -25,11 +28,19 @@ export default class CommonStore {
     this.error = error;
   }
 
-  setToken(token) {
+  setToken(token: string | null) {
     this.token = token;
   }
 
   setAppLoaded() {
     this.appLoaded = true;
+  }
+
+  setOrderMode(mode: boolean) {
+    this.isOrderMode = mode;
+  }
+
+  setSelectedClient(client: Client | null) {
+    this.selectedClient = client;
   }
 }
