@@ -90,7 +90,16 @@ const PlaceOrderList: React.FC = () => {
         <Table sx={{ minWidth: 650 }} aria-label="customized table">
           <TableHead sx={{ bgcolor: "#525252" }}>
             <TableRow>
-              <TableCell sx={{ color: "white" }}>Name</TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: "white" }}>
+                  Image
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: "white" }}>
+                  Name
+                </Typography>
+              </TableCell>
               <TableCell>
                 <Typography variant="h6" sx={{ color: "white" }}>
                   Code
@@ -123,7 +132,7 @@ const PlaceOrderList: React.FC = () => {
               </TableCell>
               <TableCell>
                 <Typography variant="h6" sx={{ color: "white" }}>
-                  Case/Unit
+                  Case / Unit
                 </Typography>
               </TableCell>
               <TableCell>
@@ -149,6 +158,13 @@ const PlaceOrderList: React.FC = () => {
                     },
                   }}
                 >
+                  <TableCell>
+                    <img
+                      src="/candy.png"
+                      alt={item.product.name}
+                      style={{ width: 90 }}
+                    />
+                  </TableCell>
                   <TableCell>{item.product.name}</TableCell>
                   <TableCell>{item.product.code}</TableCell>
                   <TableCell>${item.product.unitPrice}</TableCell>
@@ -167,16 +183,17 @@ const PlaceOrderList: React.FC = () => {
                             event.target.value === "Case"
                           )
                         }
+                        sx={{ flexDirection: "row", flexWrap: "nowrap" }}
                       >
                         <FormControlLabel
                           value="Case"
                           control={<Radio />}
-                          label="Case"
+                          label={<Typography variant="body2">Case</Typography>}
                         />
                         <FormControlLabel
                           value="Unit"
                           control={<Radio />}
-                          label="Unit"
+                          label={<Typography variant="body2">Unit</Typography>}
                         />
                       </RadioGroup>
                     )}
@@ -191,6 +208,12 @@ const PlaceOrderList: React.FC = () => {
                             event.target.value as number
                           )
                         }
+                        sx={{
+                          fontSize: "0.8rem",
+                          height: "2rem",
+                          py: 0,
+                          ml: 1,
+                        }}
                       >
                         {[...Array(30).keys()].map((value) => (
                           <MenuItem key={value} value={value + 1}>
@@ -215,7 +238,7 @@ const PlaceOrderList: React.FC = () => {
                       <Button
                         variant="contained"
                         startIcon={<AddIcon />}
-                        sx={{ alignSelf: "baseline" }}
+                        sx={{ alignSelf: "baseline", fontSize: "0.8rem" }}
                         onClick={() =>
                           handleAddItemToCart(
                             item.id,

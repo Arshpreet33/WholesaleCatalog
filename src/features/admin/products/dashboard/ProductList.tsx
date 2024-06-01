@@ -69,17 +69,17 @@ const ProductList: React.FC = () => {
             <TableRow>
               <TableCell>
                 <Typography variant="h6" sx={{ color: "white" }}>
+                  Image
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: "white" }}>
                   Name
                 </Typography>
               </TableCell>
               <TableCell>
                 <Typography variant="h6" sx={{ color: "white" }}>
                   Code
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="h6" sx={{ color: "white" }}>
-                  Description
                 </Typography>
               </TableCell>
               <TableCell>
@@ -145,9 +145,15 @@ const ProductList: React.FC = () => {
                     },
                   }}
                 >
+                  <TableCell>
+                    <img
+                      src="/candy.png"
+                      alt={product.name}
+                      style={{ width: 90 }}
+                    />
+                  </TableCell>
                   <TableCell>{product.name}</TableCell>
                   <TableCell>{product.code}</TableCell>
-                  <TableCell>{product.description}</TableCell>
                   <TableCell>${product.unitPrice}</TableCell>
                   <TableCell>{product.unitWeight}g</TableCell>
                   <TableCell>{product.itemsInCase}</TableCell>

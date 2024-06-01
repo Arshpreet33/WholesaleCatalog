@@ -6,6 +6,7 @@ export default class CartStore {
   cartItems: CartItem[] = [];
   products: Product[] = [];
   totalPrice = 0;
+  totalItems = 0;
   // loadingInitial = true;
   submitting = false;
 
@@ -44,6 +45,7 @@ export default class CartStore {
         byCase,
       });
       runInAction(() => {
+        this.setTotalItems();
         this.setSubmitting(false);
       });
     } catch (error) {
@@ -59,6 +61,7 @@ export default class CartStore {
     try {
       this.cartItems = this.cartItems.filter((item) => item.id !== id);
       runInAction(() => {
+        this.setTotalItems();
         this.setSubmitting(false);
       });
     } catch (error) {
@@ -77,6 +80,7 @@ export default class CartStore {
         item.quantity = quantity;
       }
       runInAction(() => {
+        this.setTotalItems();
         this.setSubmitting(false);
       });
     } catch (error) {
@@ -92,6 +96,7 @@ export default class CartStore {
     try {
       this.setCartItems([]);
       runInAction(() => {
+        this.setTotalItems();
         this.setSubmitting(false);
       });
     } catch (error) {
@@ -109,6 +114,13 @@ export default class CartStore {
   setTotalPrice = () => {
     this.totalPrice = this.cartItems.reduce(
       (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+  };
+
+  setTotalItems = () => {
+    this.totalItems = this.cartItems.reduce(
+      (sum, item) => sum + item.quantity,
       0
     );
   };
