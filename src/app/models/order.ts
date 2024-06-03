@@ -1,23 +1,37 @@
-import { Category } from "./category";
 import { Client } from "./client";
-import { Manufacturer } from "./manufacturer";
-import { Product } from "./product";
+import { OrderItem } from "./orderItem";
+import { AppUser } from "./user";
 
 export interface IOrder {
-  id: string;
-  number: string;
+  id?: string;
+  orderNumber: string;
   orderDate: Date;
   clientId: string;
   client: Client;
-  manufacturerId: string;
-  manufacturer: Manufacturer;
-  categoryId: string;
-  category: Category;
-  productId: string;
-  product: Product;
-  quantity: number;
-  isCase: boolean;
-  price: number;
+  userName: string;
+  user?: AppUser;
+  subTotal: number;
+  itemsCount: number;
+  orderItems: OrderItem[];
+  notes?: string;
   isApproved: boolean;
-  createdBy: string;
+}
+
+export class Order implements IOrder {
+  id?: string;
+  orderNumber: string;
+  orderDate: Date;
+  clientId: string;
+  client: Client;
+  userName: string;
+  user?: AppUser;
+  subTotal: number;
+  itemsCount: number;
+  orderItems: OrderItem[];
+  notes?: string;
+  isApproved: boolean;
+
+  constructor(init?: IOrder) {
+    Object.assign(this, init);
+  }
 }

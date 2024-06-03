@@ -14,6 +14,7 @@ export interface IProduct {
   imageUrl?: string;
   isActive: boolean;
   category: Category;
+  categoryId: string;
   addedToCart?: boolean;
 }
 
@@ -31,6 +32,7 @@ export class Product implements IProduct {
   imageUrl?: string;
   isActive: boolean;
   category: Category;
+  categoryId: string;
   addedToCart?: boolean;
 
   constructor(init: ProductFormValues) {

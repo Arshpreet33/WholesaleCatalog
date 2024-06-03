@@ -16,10 +16,12 @@ import {
 } from "../models/manufacturer.ts";
 import { Category, CategoryFormValues } from "../models/category.ts";
 import { Product, ProductFormValues } from "../models/product.ts";
+import { Order } from "../models/order.ts";
+import { OrderItem } from "../models/orderItem.ts";
 
-//axios.defaults.baseURL = "http://localhost:2030/api";
+axios.defaults.baseURL = "http://localhost:2030/api";
 
-axios.defaults.baseURL = "https://wholesale-api.o2p.dev/api";
+// axios.defaults.baseURL = "https://wholesale-api.o2p.dev/api";
 
 axios.interceptors.request.use((config) => {
   const token = store.commonStore.token;
@@ -165,6 +167,26 @@ const AppUsers = {
     requests.toggleActive<void>(userUrl + "/toggle/" + userName),
 };
 
+const orderUrl = "/orders";
+const Orders = {
+  list: (params: URLSearchParams) =>
+    axios
+      .get<PaginatedResults<Order[]>>(orderUrl, { params })
+      .then(responseBody),
+  itemsList: (params: URLSearchParams) =>
+    axios
+      .get<PaginatedResults<OrderItem[]>>(orderUrl + "/items", { params })
+      .then(responseBody),
+  myOrdersList: (params: URLSearchParams) =>
+    axios
+      .get<PaginatedResults<Order[]>>(orderUrl + "/myorders", { params })
+      .then(responseBody),
+  details: (id: string) => requests.get<Order>(orderUrl + "/" + id),
+  create: (order: Order) => requests.post<void>(orderUrl, order),
+  toggleActive: (id: string) =>
+    requests.toggleActive<void>(orderUrl + "/approve/" + id),
+};
+
 const Account = {
   current: () => requests.get<IUser>("/account"),
   login: (user: ILoginFormValues) =>
@@ -179,6 +201,7 @@ const agent = {
   Categories,
   Products,
   AppUsers,
+  Orders,
   Account,
 };
 
