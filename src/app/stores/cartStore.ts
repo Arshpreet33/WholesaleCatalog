@@ -46,6 +46,7 @@ export default class CartStore {
       });
       runInAction(() => {
         this.setTotalItems();
+        this.setTotalPrice();
         this.setSubmitting(false);
       });
     } catch (error) {
@@ -62,6 +63,7 @@ export default class CartStore {
       this.cartItems = this.cartItems.filter((item) => item.id !== id);
       runInAction(() => {
         this.setTotalItems();
+        this.setTotalPrice();
         this.setSubmitting(false);
       });
     } catch (error) {
@@ -81,6 +83,7 @@ export default class CartStore {
       }
       runInAction(() => {
         this.setTotalItems();
+        this.setTotalPrice();
         this.setSubmitting(false);
       });
     } catch (error) {
@@ -97,6 +100,7 @@ export default class CartStore {
       this.setCartItems([]);
       runInAction(() => {
         this.setTotalItems();
+        this.setTotalPrice();
         this.setSubmitting(false);
       });
     } catch (error) {
