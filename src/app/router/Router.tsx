@@ -26,6 +26,10 @@ import UnAuthorized from "../../features/errors/UnAuthorized.tsx";
 import LoginForm from "../../features/users/LoginForm.tsx";
 import PlaceOrderDashboard from "../../features/user/placeOrder/PlaceOrderDashboard.tsx";
 import CartDashboard from "../../features/user/cart/CartDashboard.tsx";
+import OrderDashboard from "../../features/admin/orders/dashboard/OrderDashboard.tsx";
+import OrderItemDashboard from "../../features/admin/orders/orderItems/OrderItemDashboard.tsx";
+import MyOrderDashboard from "../../features/user/myOrders/orders/MyOrderDashboard.tsx";
+import MyOrderItemDashboard from "../../features/user/myOrders/orderItems/MyOrderItemDashboard.tsx";
 
 export const Routes: RouteObject[] = [
   {
@@ -91,6 +95,13 @@ export const Routes: RouteObject[] = [
           { path: "edit/:username", element: <AppUserForm /> },
         ],
       },
+      {
+        path: "orders",
+        children: [
+          { path: "", element: <OrderDashboard /> },
+          { path: ":id", element: <OrderItemDashboard /> },
+        ],
+      },
     ],
   },
   {
@@ -105,6 +116,13 @@ export const Routes: RouteObject[] = [
       { path: "home", element: <HomePage /> },
       { path: "placeorder", element: <PlaceOrderDashboard /> },
       { path: "cart", element: <CartDashboard /> },
+      {
+        path: "myorders",
+        children: [
+          { path: "", element: <MyOrderDashboard /> },
+          { path: ":id", element: <MyOrderItemDashboard /> },
+        ],
+      },
     ],
   },
 
