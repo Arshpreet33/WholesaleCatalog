@@ -1,19 +1,18 @@
 import React from "react";
 import { Box } from "@mui/material";
 import { observer } from "mobx-react-lite";
-import { Outlet } from "react-router-dom";
-import MyOrderFilters from "./MyOrderFilters";
-import MyOrderList from "./MyOrderList";
+import MyOrderFilters from "./MyOrderFilters.tsx";
+import MyOrderList from "./MyOrderList.tsx";
+import "./styles.css";
 
 const MyOrderDashboard: React.FC = () => {
   return (
     <div>
-      <h1>Products</h1>
+      <h1>My Orders</h1>
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <MyOrderFilters />
       </Box>
       <MyOrderList />
-      <Outlet />
     </div>
   );
 };

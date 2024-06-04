@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { Product } from '../../../models/product'
+import * as React from "react";
+import { Product } from "../../../models/product";
 import {
   Button,
   Typography,
@@ -9,20 +9,20 @@ import {
   CardActionArea,
   CardActions,
   Box,
-} from '@mui/material'
+} from "@mui/material";
 
 interface Props {
-  products: Product[]
+  products: Product[];
 }
 
 const ProductList = ({ products }: Props) => {
   return (
     <Box
       sx={{
-        display: 'grid',
+        display: "grid",
         columnGap: 4,
         rowGap: 4,
-        gridTemplateColumns: 'repeat(3, 1fr)',
+        gridTemplateColumns: "repeat(3, 1fr)",
       }}
     >
       {/* <Box sx={{flexGrow:1}}>
@@ -34,7 +34,7 @@ const ProductList = ({ products }: Props) => {
             <CardMedia
               component="img"
               height="140"
-              image="/candy.png"
+              image={product.imageUrl}
               alt="Candy image here"
             />
             <CardContent>
@@ -60,7 +60,7 @@ const ProductList = ({ products }: Props) => {
       {/* </Box>
        </Grid> */}
     </Box>
-  )
-}
+  );
+};
 
-export default ProductList
+export default ProductList;

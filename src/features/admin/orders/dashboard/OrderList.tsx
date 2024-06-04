@@ -18,6 +18,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { useStore } from "../../../../app/stores/store.ts";
 import { observer } from "mobx-react-lite";
 import { Link } from "react-router-dom";
+import { formatDate } from "../../../../app/utils/dateUtils.js";
 
 const OrderList: React.FC = () => {
   const { orderStore } = useStore();
@@ -29,6 +30,7 @@ const OrderList: React.FC = () => {
     orders,
     pagingParams,
     loadingInitial,
+    isApprovedFilter,
   } = orderStore;
 
   const navigateToHome = (pageNumber: number) => {
@@ -100,6 +102,13 @@ const OrderList: React.FC = () => {
                   Order Items
                 </Typography>
               </TableCell>
+              {!isApprovedFilter && (
+                <TableCell>
+                  <Typography variant="h6" sx={{ color: "white" }}>
+                    Approve
+                  </Typography>
+                </TableCell>
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -114,9 +123,9 @@ const OrderList: React.FC = () => {
                   }}
                 >
                   <TableCell>{order.orderNumber}</TableCell>
-                  <TableCell>{order.orderDate.toDateString()}</TableCell>
+                  <TableCell>{formatDate(order.orderDate)}</TableCell>
                   <TableCell>{order.client.name}</TableCell>
-                  <TableCell>{order.user.userName}</TableCell>
+                  <TableCell>{order.userName}</TableCell>
                   <TableCell>${order.subTotal}</TableCell>
                   <TableCell>{order.itemsCount}</TableCell>
                   <TableCell>{order.isApproved.toString()}</TableCell>

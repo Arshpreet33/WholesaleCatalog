@@ -1,9 +1,9 @@
 import React from "react";
 import { Box } from "@mui/material";
 import { observer } from "mobx-react-lite";
-import { Outlet } from "react-router-dom";
-import OrderFilters from "./OrderFilters";
-import OrderList from "./OrderList";
+import OrderFilters from "./OrderFilters.tsx";
+import OrderList from "./OrderList.tsx";
+import "./styles.css";
 
 const OrderDashboard: React.FC = () => {
   return (
@@ -13,7 +13,6 @@ const OrderDashboard: React.FC = () => {
         <OrderFilters />
       </Box>
       <OrderList />
-      <Outlet />
     </div>
   );
 };

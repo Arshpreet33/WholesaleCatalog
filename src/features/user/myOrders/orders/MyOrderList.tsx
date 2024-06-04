@@ -17,6 +17,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { useStore } from "../../../../app/stores/store.ts";
 import { observer } from "mobx-react-lite";
 import { Link } from "react-router-dom";
+import { formatDate } from "../../../../app/utils/dateUtils.js";
 
 const MyOrderList: React.FC = () => {
   const { orderStore } = useStore();
@@ -71,11 +72,6 @@ const MyOrderList: React.FC = () => {
               </TableCell>
               <TableCell>
                 <Typography variant="h6" sx={{ color: "white" }}>
-                  User
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="h6" sx={{ color: "white" }}>
                   Sub Total
                 </Typography>
               </TableCell>
@@ -108,9 +104,8 @@ const MyOrderList: React.FC = () => {
                   }}
                 >
                   <TableCell>{order.orderNumber}</TableCell>
-                  <TableCell>{order.orderDate.toDateString()}</TableCell>
+                  <TableCell>{formatDate(order.orderDate)}</TableCell>
                   <TableCell>{order.client.name}</TableCell>
-                  <TableCell>{order.user.userName}</TableCell>
                   <TableCell>${order.subTotal}</TableCell>
                   <TableCell>{order.itemsCount}</TableCell>
                   <TableCell>{order.isApproved.toString()}</TableCell>

@@ -13,8 +13,10 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useStore } from "../../../app/stores/store.ts";
 import { observer } from "mobx-react-lite";
+import { useNavigate } from "react-router-dom";
 
 const CartDashboard: React.FC = () => {
+  const navigate = useNavigate();
   const { cartStore, commonStore, orderStore } = useStore();
   const { selectedClient, isOrderMode } = commonStore;
   const {
@@ -45,6 +47,7 @@ const CartDashboard: React.FC = () => {
     cartStore.clearCart();
     commonStore.setOrderMode(false);
     commonStore.setSelectedClient(null);
+    navigate("/user/myorders");
   };
 
   return isOrderMode ? (
@@ -68,7 +71,7 @@ const CartDashboard: React.FC = () => {
                 <CardMedia
                   component="img"
                   sx={{ width: 140 }}
-                  image="/candy.png"
+                  image={item.product.imageUrl}
                   alt={item.product.name}
                 />
                 <Box sx={{ flexGrow: 1, ml: 2 }}>

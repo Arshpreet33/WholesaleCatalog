@@ -105,10 +105,10 @@ export default class ProductStore {
     return this.products.find((product) => product.id === id);
   };
 
-  saveProduct = async (product: ProductFormValues) => {
+  saveProduct = async (formData: FormData) => {
     this.submitting = true;
     try {
-      await agent.Products.create(product);
+      await agent.Products.create(formData);
       this.setSubmitting(false);
       this.setEditMode(false);
     } catch (error) {
@@ -117,10 +117,10 @@ export default class ProductStore {
     }
   };
 
-  updateProduct = async (product: ProductFormValues) => {
+  updateProduct = async (id: string, formData: FormData) => {
     this.submitting = true;
     try {
-      await agent.Products.edit(product);
+      await agent.Products.edit(id, formData);
       this.setSubmitting(false);
       this.setEditMode(false);
     } catch (error) {

@@ -100,7 +100,7 @@ const OrderItemList: React.FC<OrderItemListProps> = ({ orderId }) => {
                 >
                   <TableCell>
                     <img
-                      src="/candy.png"
+                      src={orderItem.product.imageUrl}
                       alt={orderItem.product.name}
                       style={{ width: 90 }}
                     />

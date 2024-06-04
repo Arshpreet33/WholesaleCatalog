@@ -15,6 +15,7 @@ export interface IProduct {
   isActive: boolean;
   category: Category;
   categoryId: string;
+  image: File | null;
   addedToCart?: boolean;
 }
 
@@ -33,6 +34,7 @@ export class Product implements IProduct {
   isActive: boolean;
   category: Category;
   categoryId: string;
+  image: File | null;
   addedToCart?: boolean;
 
   constructor(init: ProductFormValues) {
@@ -54,6 +56,7 @@ export class ProductFormValues {
   casesInStock: number = 0;
   imageUrl?: string = "";
   categoryId: string = "";
+  image: File | null = null;
 
   constructor(product?: ProductFormValues) {
     if (product) {
@@ -69,6 +72,7 @@ export class ProductFormValues {
       this.casesInStock = product.casesInStock;
       this.imageUrl = product.imageUrl ?? "";
       this.categoryId = product.categoryId;
+      this.image = product.image;
     }
   }
 }

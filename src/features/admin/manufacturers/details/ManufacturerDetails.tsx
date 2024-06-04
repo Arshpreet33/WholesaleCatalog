@@ -48,14 +48,6 @@ const ManufacturerDetails: React.FC<{}> = () => {
               <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>
                 Description: {description}
               </Typography>
-              <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>
-                Image:{" "}
-                <img
-                  src={imageUrl}
-                  alt={name}
-                  style={{ width: "50px", height: "50px" }}
-                />
-              </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
               <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>

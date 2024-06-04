@@ -49,14 +49,6 @@ const CategoryDetails: React.FC<{}> = () => {
                 Description: {description}
               </Typography>
               <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>
-                Image:{" "}
-                <img
-                  src={imageUrl}
-                  alt={name}
-                  style={{ width: "50px", height: "50px" }}
-                />
-              </Typography>
-              <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>
                 Manufacturer: {manufacturer.name}
               </Typography>
             </Grid>

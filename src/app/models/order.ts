@@ -10,6 +10,7 @@ export interface IOrder {
   client: Client;
   userName: string;
   user?: AppUser;
+  userId?: string;
   subTotal: number;
   itemsCount: number;
   orderItems: OrderItem[];
@@ -25,6 +26,7 @@ export class Order implements IOrder {
   client: Client;
   userName: string;
   user?: AppUser;
+  userId?: string;
   subTotal: number;
   itemsCount: number;
   orderItems: OrderItem[];

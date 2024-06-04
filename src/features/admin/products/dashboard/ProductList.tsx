@@ -147,7 +147,7 @@ const ProductList: React.FC = () => {
                 >
                   <TableCell>
                     <img
-                      src="/candy.png"
+                      src={product.imageUrl}
                       alt={product.name}
                       style={{ width: 90 }}
                     />

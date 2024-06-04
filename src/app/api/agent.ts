@@ -142,10 +142,9 @@ const Products = {
       .get<PaginatedResults<Product[]>>(productUrl, { params })
       .then(responseBody),
   details: (id: string) => requests.get<Product>(productUrl + "/" + id),
-  create: (product: ProductFormValues) =>
-    requests.post<void>(productUrl, product),
-  edit: (product: ProductFormValues) =>
-    requests.put<void>(productUrl + "/" + product.id, product),
+  create: (formData: FormData) => requests.post<void>(productUrl, formData),
+  edit: (id, formData: FormData) =>
+    requests.put<void>(productUrl + "/" + id, formData),
   delete: (id: string) => requests.del<void>(productUrl + "/" + id),
   toggleActive: (id: string) =>
     requests.toggleActive<void>(productUrl + "/toggle/" + id),

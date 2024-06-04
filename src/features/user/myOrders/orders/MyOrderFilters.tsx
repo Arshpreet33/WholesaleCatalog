@@ -25,9 +25,8 @@ const MyOrderFilters: React.FC = () => {
     setOrderNumberFilter,
     setIsApprovedFilter,
     setPagingParams,
-    loadOrders,
     setClientFilter,
-    loadActiveUsers,
+    loadMyOrders,
   } = orderStore;
 
   const loadFilteredOrders = () => {
@@ -35,7 +34,7 @@ const MyOrderFilters: React.FC = () => {
       pageNumber: 1,
       pageSize: orderStore.pagingParams.pageSize,
     });
-    loadOrders();
+    loadMyOrders();
   };
 
   const handleOrderNumberChange = (
@@ -59,8 +58,7 @@ const MyOrderFilters: React.FC = () => {
 
   useEffect(() => {
     loadActiveClients();
-    loadActiveUsers();
-  }, [loadActiveClients, loadActiveUsers]);
+  }, [loadActiveClients]);
 
   if (loadingFilters) return <CircularProgress />;
 

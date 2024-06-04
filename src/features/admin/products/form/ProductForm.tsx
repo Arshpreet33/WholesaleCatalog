@@ -8,6 +8,9 @@ import MyTextInput from "../../../../app/common/form/MyTextInput.tsx";
 import { useStore } from "../../../../app/stores/store.ts";
 import { observer } from "mobx-react-lite";
 import { v4 as uuid } from "uuid";
+import Delete from "@mui/icons-material/Delete";
+import UploadIcon from "@mui/icons-material/Upload";
+import { set } from "mobx";
 
 const enum DISPLAY_NAMES {
   name = "Name",
@@ -19,7 +22,6 @@ const enum DISPLAY_NAMES {
   casePrice = "Case Price",
   itemsInStock = "Items in Stock",
   casesInStock = "Cases in Stock",
-  imageUrl = "Image URL",
   categoryId = "Category",
 }
 
@@ -33,7 +35,6 @@ const enum FIELD_NAMES {
   casePrice = "casePrice",
   itemsInStock = "itemsInStock",
   casesInStock = "casesInStock",
-  imageUrl = "imageUrl",
   categoryId = "categoryId",
 }
 
@@ -58,6 +59,28 @@ const ProductForm: React.FC = () => {
 
   const { id } = useParams();
 
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewSource, setPreviewSource] = useState<string | null>(null);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files![0];
+    previewFile(file);
+    setSelectedFile(file);
+  };
+
+  const previewFile = (file: File) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setPreviewSource(reader.result as string);
+    };
+  };
+
+  const handleClearImage = () => {
+    setSelectedFile(null);
+    setPreviewSource(null);
+  };
+
   const navigateToHome = () => {
     setPagingParams({
       pageNumber: 1,
@@ -67,11 +90,16 @@ const ProductForm: React.FC = () => {
   };
 
   const handleCreateOrEditProduct = (product: ProductFormValues) => {
-    if (product.id) {
-      updateProduct(product).then(() => navigateToHome());
+    if (!product.id) product.id = uuid();
+    const formData = new FormData();
+    Object.keys(product).forEach((key) => {
+      formData.append(key, product[key]);
+    });
+
+    if (editMode) {
+      updateProduct(product.id!, formData).then(() => navigateToHome());
     } else {
-      product.id = uuid();
-      saveProduct(product).then(() => navigateToHome());
+      saveProduct(formData).then(() => navigateToHome());
     }
   };
 
@@ -98,7 +126,6 @@ const ProductForm: React.FC = () => {
     casePrice: Yup.number().required("Required"),
     itemsInStock: Yup.number().required("Required"),
     casesInStock: Yup.number().required("Required"),
-    imageUrl: Yup.string().url("Invalid URL"),
     categoryId: Yup.string().required("Required"),
   });
 
@@ -112,7 +139,6 @@ const ProductForm: React.FC = () => {
     casePrice: Yup.number().required("Required"),
     itemsInStock: Yup.number().required("Required"),
     casesInStock: Yup.number().required("Required"),
-    imageUrl: Yup.string().url("Invalid URL"),
   });
 
   if (editMode && (loadingInitial || !product || loadingFilters || !categories))
@@ -133,110 +159,181 @@ const ProductForm: React.FC = () => {
         >
           {({ handleSubmit, isValid, isSubmitting, dirty, setFieldValue }) => (
             <form onSubmit={handleSubmit}>
-              <Grid container spacing={3} direction="column">
-                <Grid item>
-                  <MyTextInput
-                    name={FIELD_NAMES.name}
-                    label={DISPLAY_NAMES.name}
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item>
-                  <MyTextInput
-                    name={FIELD_NAMES.code}
-                    label={DISPLAY_NAMES.code}
-                  />
-                </Grid>
-                <Grid item>
-                  <MyTextInput
-                    name={FIELD_NAMES.description}
-                    label={DISPLAY_NAMES.description}
-                    fullWidth
-                    rows={3}
-                  />
-                </Grid>
-                <Grid item>
-                  <MyTextInput
-                    name={FIELD_NAMES.unitPrice}
-                    label={DISPLAY_NAMES.unitPrice}
-                    type="number"
-                  />
-                </Grid>
-                <Grid item>
-                  <MyTextInput
-                    name={FIELD_NAMES.unitWeight}
-                    label={DISPLAY_NAMES.unitWeight}
-                    type="number"
-                  />
-                </Grid>
-                <Grid item>
-                  <MyTextInput
-                    name={FIELD_NAMES.itemsInCase}
-                    label={DISPLAY_NAMES.itemsInCase}
-                    type="number"
-                  />
-                </Grid>
-                <Grid item>
-                  <MyTextInput
-                    name={FIELD_NAMES.casePrice}
-                    label={DISPLAY_NAMES.casePrice}
-                    type="number"
-                  />
-                </Grid>
-                <Grid item>
-                  <MyTextInput
-                    name={FIELD_NAMES.itemsInStock}
-                    label={DISPLAY_NAMES.itemsInStock}
-                    type="number"
-                  />
-                </Grid>
-                <Grid item>
-                  <MyTextInput
-                    name={FIELD_NAMES.casesInStock}
-                    label={DISPLAY_NAMES.casesInStock}
-                    type="number"
-                  />
-                </Grid>
-                <Grid item>
-                  <MyTextInput
-                    name={FIELD_NAMES.imageUrl}
-                    label={DISPLAY_NAMES.imageUrl}
-                    fullWidth
-                  />
-                </Grid>
-                {!editMode && (
-                  <Grid item>
-                    <MyTextInput
-                      name={FIELD_NAMES.categoryId}
-                      label={DISPLAY_NAMES.categoryId}
-                      select
-                      list={categories}
-                      defaultValue={product.categoryId ?? categories?.[0]?.id}
-                      fullWidth
-                    />
-                  </Grid>
-                )}
-                <Grid item container spacing={8}>
-                  <Grid item>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      disabled={isSubmitting || !dirty || !isValid}
-                    >
-                      {editMode ? "Save" : "Add"}
-                    </Button>
-                  </Grid>
+              <Grid container spacing={20}>
+                <Grid item xs={6}>
+                  <Grid container spacing={3} direction="column">
+                    <Grid item>
+                      <MyTextInput
+                        name={FIELD_NAMES.name}
+                        label={DISPLAY_NAMES.name}
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item>
+                      <MyTextInput
+                        name={FIELD_NAMES.code}
+                        label={DISPLAY_NAMES.code}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <MyTextInput
+                        name={FIELD_NAMES.description}
+                        label={DISPLAY_NAMES.description}
+                        fullWidth
+                        rows={3}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <MyTextInput
+                        name={FIELD_NAMES.unitPrice}
+                        label={DISPLAY_NAMES.unitPrice}
+                        type="number"
+                      />
+                    </Grid>
+                    <Grid item>
+                      <MyTextInput
+                        name={FIELD_NAMES.unitWeight}
+                        label={DISPLAY_NAMES.unitWeight}
+                        type="number"
+                      />
+                    </Grid>
+                    <Grid item>
+                      <MyTextInput
+                        name={FIELD_NAMES.itemsInCase}
+                        label={DISPLAY_NAMES.itemsInCase}
+                        type="number"
+                      />
+                    </Grid>
+                    <Grid item>
+                      <MyTextInput
+                        name={FIELD_NAMES.casePrice}
+                        label={DISPLAY_NAMES.casePrice}
+                        type="number"
+                      />
+                    </Grid>
+                    {!editMode && (
+                      <Grid item>
+                        <MyTextInput
+                          name={FIELD_NAMES.categoryId}
+                          label={DISPLAY_NAMES.categoryId}
+                          select
+                          list={categories}
+                          defaultValue={
+                            product.categoryId ?? categories?.[0]?.id
+                          }
+                          fullWidth
+                        />
+                      </Grid>
+                    )}
+                    <Grid item>
+                      <Grid container spacing={8}>
+                        <Grid item>
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            disabled={isSubmitting || !dirty || !isValid}
+                          >
+                            {editMode ? "Save" : "Add"}
+                          </Button>
+                        </Grid>
 
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      component={Link}
-                      to={`/admin/products`}
-                    >
-                      Cancel
-                    </Button>
+                        <Grid item>
+                          <Button
+                            variant="contained"
+                            color="error"
+                            component={Link}
+                            to={`/admin/products`}
+                          >
+                            Cancel
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={6}>
+                  <Grid container spacing={4} direction={"column"}>
+                    <Grid item>
+                      {previewSource ? (
+                        <div
+                          style={{
+                            width: "500px",
+                            height: "400px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            overflow: "hidden",
+                            border: "1px dashed gray",
+                          }}
+                        >
+                          <img
+                            src={previewSource}
+                            alt="Product preview"
+                            style={{
+                              maxWidth: "100%",
+                              maxHeight: "100%",
+                              objectFit: "contain",
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        <div
+                          style={{
+                            width: "500px",
+                            height: "400px",
+                            border: "1px dashed gray",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          No image selected - Please upload image
+                        </div>
+                      )}
+                    </Grid>
+                    <Grid item>
+                      <Grid container spacing={5}>
+                        <Grid item>
+                          {!editMode || (editMode && !previewSource) ? (
+                            <>
+                              <input
+                                accept="image/*"
+                                style={{ display: "none" }}
+                                id="raised-button-file"
+                                type="file"
+                                onChange={(event) => {
+                                  handleFileChange(event);
+                                  setFieldValue(
+                                    "image",
+                                    event.currentTarget.files![0]
+                                  );
+                                }}
+                              />
+                              <label htmlFor="raised-button-file">
+                                <Button
+                                  variant="outlined"
+                                  component="span"
+                                  startIcon={<UploadIcon />}
+                                >
+                                  Upload Image
+                                </Button>
+                              </label>
+                            </>
+                          ) : null}
+                        </Grid>
+                        <Grid item>
+                          <Button
+                            variant="outlined"
+                            color="error"
+                            onClick={handleClearImage}
+                            startIcon={<Delete />}
+                          >
+                            Clear Image
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>

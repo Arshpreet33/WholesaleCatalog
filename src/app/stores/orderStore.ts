@@ -1,11 +1,12 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { IOrder, Order } from "../models/order";
-import { IOrderItem, OrderItem } from "../models/orderItem";
+import { Order } from "../models/order";
+import { OrderItem } from "../models/orderItem";
 import agent from "../api/agent.ts";
 import { Pagination, PagingParams } from "../models/pagination.ts";
 import { Client } from "../models/client.ts";
 import { AppUser } from "../models/user.ts";
 import { CartItem } from "../models/cartItem.ts";
+import { v4 as uuid } from "uuid";
 
 export default class OrderStore {
   orders: Order[] = [];
@@ -18,7 +19,7 @@ export default class OrderStore {
   submitting = false;
   pagination: Pagination | null = null;
   pagingParams = new PagingParams();
-  isApprovedFilter = false;
+  isApprovedFilter = true;
   clientFilter = "";
   userFilter = "";
   orderNumberFilter = "";
@@ -172,11 +173,13 @@ export default class OrderStore {
 
   createOrderModel = (cartItems: CartItem[], client: Client) => {
     let order: Order = {
-      orderNumber: "",
+      id: uuid(),
+      orderNumber: "123",
       orderDate: new Date(),
       clientId: client.id,
       client: client,
       userName: "",
+      userId: "",
       subTotal: 0,
       itemsCount: 0,
       orderItems: [],
@@ -185,9 +188,10 @@ export default class OrderStore {
 
     order.orderItems = cartItems.map((item) => {
       let orderItem: OrderItem = {
+        id: uuid(),
         product: item.product,
         productId: item.id,
-        orderId: "",
+        orderId: order.id ?? "",
         quantity: item.quantity,
         unitPrice: item.price,
         totalPrice: item.price * item.quantity,

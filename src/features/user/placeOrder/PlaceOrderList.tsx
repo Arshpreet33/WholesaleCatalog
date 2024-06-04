@@ -160,7 +160,7 @@ const PlaceOrderList: React.FC = () => {
                 >
                   <TableCell>
                     <img
-                      src="/candy.png"
+                      src={item.product.imageUrl}
                       alt={item.product.name}
                       style={{ width: 90 }}
                     />
